@@ -22,4 +22,4 @@ for i in range(line):
     print()
     stars2-=1
 
-print("Grundo")
+print("Thanks!")
