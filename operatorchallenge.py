@@ -14,3 +14,5 @@ print("Your third digit is:", digit3)
 digit4 = num%10000
 print("Your fourth digit is:", digit4)
 
+digit5 = num%100000
+print("Your fifth digit is:", digit5)
