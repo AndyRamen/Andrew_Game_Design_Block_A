@@ -17,4 +17,8 @@ try:
 except ValueError:
     check=False
 
-print(check)
+if(check):
+    #I will be back
+    print()
+else:
+    print(len(userInput))
