@@ -6,7 +6,7 @@
 #Check for even numbers
 
 import os
-os.system('cis')
+os.system('cls')
 
 num= int(input("Give me a number: "))
 rem=num%2
