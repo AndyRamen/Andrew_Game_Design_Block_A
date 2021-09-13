@@ -1,5 +1,5 @@
 import os
-os.system('cis')
+os.system('cls')
 
 num= int(input("Give me a number "))
 digit1 = num%10
