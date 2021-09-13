@@ -22,3 +22,5 @@ if(check):
     print()
 else:
     print(len(userInput))
+for i in userInput:
+    print(i)
