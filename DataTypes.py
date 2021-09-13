@@ -24,3 +24,6 @@ else:
     print(len(userInput))
 for i in userInput:
     print(i)
+
+if len(userInput>3):
+    print (userInput[3])
