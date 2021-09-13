@@ -3,7 +3,7 @@
 # + - * / %
 # % is more important in comp sci
 # % is mod
-#Check for even numbers
+# Check for even numbers
 
 import os
 os.system('cls')
