@@ -13,7 +13,7 @@ if(check):
     print()
 else:
     print(len(userInput))
-
+    
 var1=int(input("Type your first number: "))
 var2=int(input("Type your second number: "))
 print("Note: In subtraction the second number will be subtracted from the first. In division, it will be the first number divided by the second.")
