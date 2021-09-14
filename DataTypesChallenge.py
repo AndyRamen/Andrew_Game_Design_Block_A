@@ -2,7 +2,7 @@ import os
 
 os.system('cls')
 
-userInput=input("type something ")
+userInput=input("type something: ")
 print (type(userInput))
 try:
     int(userInput)
