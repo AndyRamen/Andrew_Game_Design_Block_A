@@ -1,4 +1,4 @@
-e = (input("Type out a sentence: "))
+e = (input("Type out a word, phrase, or sentence: "))
 f = e
 print(f[:4])
 
