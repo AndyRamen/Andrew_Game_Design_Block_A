@@ -28,7 +28,6 @@ print(myorder.format(quantity, itemno, price))
 e = (input("Type out a sentence: "))
 f = e
 print(f[:4])
-print("I forgor 💀")
 f = e 
 print(f[-5:-2])
 
