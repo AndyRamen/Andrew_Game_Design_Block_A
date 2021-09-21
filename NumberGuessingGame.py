@@ -10,7 +10,7 @@ import random
 
 guessesTaken = 0
 number = random.randint(1, 50)
-print("I am thinking of a number between 1 and 50. Try to guess my number. You have a limit of 6 guesses. ")
+print("I am thinking of a number between 1 and 50. You have 6 chances to guess it. ")
 
 while guessesTaken < 6:
     print("Take a guess: ")
