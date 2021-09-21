@@ -9,8 +9,8 @@ os.system('cls')
 import random
 
 guessesTaken = 0
-number = random.randint(1, 100)
-print("I am thinking of a number between 1 and 100. Try to guess my number. You have a limit of 6 guesses. ")
+number = random.randint(1, 50)
+print("I am thinking of a number between 1 and 50. Try to guess my number. You have a limit of 6 guesses. ")
 
 while guessesTaken < 6:
     print("Take a guess. ")
