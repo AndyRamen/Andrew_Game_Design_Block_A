@@ -16,7 +16,7 @@ while guessesTaken < 6:
     print("Take a guess: ")
     guess = input()
     guess = int(guess)
-    
+
     guessesTaken = guessesTaken + 1
 
     if guess < number:
