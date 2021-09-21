@@ -13,7 +13,7 @@ number = random.randint(1, 50)
 print("I am thinking of a number between 1 and 50. Try to guess my number. You have a limit of 6 guesses. ")
 
 while guessesTaken < 6:
-    print("Take a guess. ")
+    print("Take a guess: ")
     guess = input()
     guess = int(guess)
     
