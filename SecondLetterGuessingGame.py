@@ -3,7 +3,7 @@
 # Randomly select a word from the list for the user to guess.
 # Use has a limited amount of turns
 # Swhor the word to the user with the characters in spaces.
-# PLay as long as the user has turns or hasn't guessed the word.
+# Play as long as the user has turns or hasn't guessed the word.
 
 
 import random, os
@@ -46,6 +46,9 @@ compParts=["keyboard", "monitor", "case", "mouse", "trackpad"]
 name= input("What is your name? ")
 counter=0
 sel = Menu()
+if sel ==4:
+    print("Bye, " + name + "!")
+
 while sel !=4:
     if sel == 2:
         print(name + ", good luck! You have 5 chances to guess my word.")
@@ -109,9 +112,8 @@ while sel !=4:
             else:
                 turns-=1
                 print("Sorry, you have ", turns, " turns left.")
-        
-        
-        
-        updateWord(word,guesses)
+    updateWord(word,guesses)
+             
+
     os.system('cls')
     sel=Menu()
