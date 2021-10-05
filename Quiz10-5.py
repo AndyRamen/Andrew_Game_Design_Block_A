@@ -1,3 +1,6 @@
+#Andrew Cai 10/5/21
+#HB
+
 #This is for question 1:
 print(len('Hello World!'))
 print("End of Q1")
@@ -51,8 +54,12 @@ var1 = "Hello"
 var2 = " World!"
 result2 = var1+var2
 print(result2)
+print("End of Q9")
+print()
 
 #This is for question 10:
 List = ['0', '1','2','3','4','6','7','8','9','10']
 List.insert(5, '5')
 print(List)
+print("End of quiz")
+print()
