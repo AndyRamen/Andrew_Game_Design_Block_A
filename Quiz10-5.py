@@ -39,13 +39,12 @@ print()
 
 #This is for question 7:
 print("sdafdasfsfhrt")
-"\t" 
+print("\t")
 print("dlgkjvslgkj")
-"\t"
 print("End of Q7")
 print()
 #This is for question 8:
-"\n"
+print("\n")
 print("dsfjsaf")
 print("End of Q8")
 print()
