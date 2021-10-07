@@ -18,13 +18,18 @@ def updateWord(word, guesses): #Function to update dashes
 #define function for menu
 def Menu():
     print()
-    #Add instrpuctions here
+    print("You have to guess a word, the type of word is provided below")
+    print()
+    print("###############################")
     print("          ----Menu----         ")
     print(                                 )
     print("           1. Animals          ")
-    print("           2. Computer parts         ")
+    print("           2. Computer Parts         ")
     print("           3. Fruits         ")
-    print("           4. Exit          ")
+    print("           4. Scoreboard        ")
+    print("           5. Exit          ")
+    print()
+    print("############################")
     print("To play the game, select 1-3 and to exit select 4.")
     print()
     sel=input("What would you like to do? ")
@@ -40,19 +45,18 @@ def selWord():
     else:
         word= random.choice(fruits)
 
-animals=["dog", "tiger", "elephant", "lion"]
-fruits=["apple", "strawberry", "blueberry", "pear"]
-compParts=["keyboard", "monitor", "case", "mouse", "trackpad"]
+animals=["tiger", "elephant", "lion"]
+fruits=["apple", "strawberry", "blueberry"]
+compParts=["keyboard", "monitor", "case", "mouse"]
 name= input("What is your name? ")
 maxScore=0
 sel = Menu()
-if sel ==4:
-    print("So long, " + name + "!")
 
-while sel !=4:
-    if sel == 2:
+
+while sel !=5:
+    if sel == 1:
         print(name + ", good luck! You have 5 chances to guess my word.")
-        word = random.choice(compParts)
+        word = random.choice(animals)
         word = word.lower()
         wordCount=len(word)
         turns=wordCount+2
@@ -73,10 +77,10 @@ while sel !=4:
                 turns-=1
                 print("Sorry, you have ", turns, " turns left.")
             updateWord(word, guesses)    
-    if sel == 1:
+    if sel == 2:
         print(name + ", good luck! You have 5 chances to guess my word.")
         turns=5
-        word = random.choice(animals)
+        word = random.choice(compParts)
         word = word.lower()
         print(word)
         guesses = ' ' 
@@ -120,4 +124,6 @@ while sel !=4:
     if score > maxScore:
         maxScore=score
     print(maxScore)
+    myFile= open('score.txt', 'r')
+    myFile.write("\n Score:", + maxScore)
     sel=Menu()
