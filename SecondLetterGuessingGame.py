@@ -44,23 +44,25 @@ animals=["dog", "tiger", "elephant", "lion"]
 fruits=["apple", "strawberry", "blueberry", "pear"]
 compParts=["keyboard", "monitor", "case", "mouse", "trackpad"]
 name= input("What is your name? ")
-counter=0
+maxScore=0
 sel = Menu()
 if sel ==4:
-    print("Bye, " + name + "!")
+    print("So long, " + name + "!")
 
 while sel !=4:
     if sel == 2:
         print(name + ", good luck! You have 5 chances to guess my word.")
-        turns=5
-        counter +=1
         word = random.choice(compParts)
         word = word.lower()
+        wordCount=len(word)
+        turns=wordCount+2
+        score=0
+        letCount=0
         print(word) #Just for checking our code, remove later.
-        guesses = ' ' 
+        guesses = '' 
         updateWord(word, guesses)
 
-        while turns > 0:
+        while turns > 0 and letCount<wordCount:
             print()
             newguess=input("Give me a letter: ")
             newguess=newguess.lower()
@@ -70,11 +72,10 @@ while sel !=4:
             else:
                 turns-=1
                 print("Sorry, you have ", turns, " turns left.")
-    
+            updateWord(word, guesses)    
     if sel == 1:
         print(name + ", good luck! You have 5 chances to guess my word.")
         turns=5
-        counter +=1
         word = random.choice(animals)
         word = word.lower()
         print(word)
@@ -95,7 +96,6 @@ while sel !=4:
     if sel == 3:
         print(name + ", good luck! You have 5 chances to guess my word.")
         turns=5
-        counter +=1
         word = random.choice(fruits)
         word = word.lower()
         print(word) 
@@ -116,4 +116,8 @@ while sel !=4:
              
 
     os.system('cls')
+    score=3*wordCount+5*turns
+    if score > maxScore:
+        maxScore=score
+    print(maxScore)
     sel=Menu()
