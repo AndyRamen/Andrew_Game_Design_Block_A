@@ -1,2 +1,5 @@
-And now we will play a game
- The highest score: 	450
+
+
+
+Yingle	 Highest score:	0
+Andrew	 Highest score:	15

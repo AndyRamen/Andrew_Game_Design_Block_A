@@ -4,13 +4,9 @@
 import os, time
 #To create a file you must declare an object so we can open a file.
 #When you open a file you need to use 'w'
-myFile= open('score.txt', 'w')
-myFile.write("Hello there, my name is Andrew \t what is yours?")
-myFile.close()
+
 #Always close a file when you are done using it.
-myFile= open('score.txt', 'w')
-myFile.write("And now we will play a game")
-myFile.close()
+
 #Read and print the file
 fileMy= open('score.txt', 'r')
 print(fileMy.read())
