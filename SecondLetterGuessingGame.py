@@ -49,19 +49,21 @@ def updateScoreFile():
     myFile.write(name + "\t Highest score:\t"+str(maxScore))
     myFile.write("\n")
     myFile.close()
+    #Updates scoreboard file
 
 def endGame():
     updateScoreFile()
     print("So long, " + name + "!")
     os._exit(0)
+    #Ends game
 
 def sel4():
     myFile= open('score.txt', 'r')
     print(myFile.read())
     myFile.close()
-    #Turn into function and CLOSE FILE
     sel = Menu()
     return sel
+    #Opens and prints scoreboard
 
 def wordSelection():
     if sel == 1:
@@ -71,13 +73,14 @@ def wordSelection():
     if sel == 3:
         word = random.choice(fruits)
     return word
+    #Selects which category the word is going to be in.
 
 animals=["tiger", "elephant", "lion"]
 fruits=["apple", "strawberry", "blueberry"]
 compParts=["keyboard", "monitor", "case", "mouse"]
 name= input("What is your name? ")
 maxScore = 0
-
+#Words in category
 #Main program starts here
 
 sel = Menu()
