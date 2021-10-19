@@ -4,3 +4,4 @@
 Yingle	 Highest score:	0
 Andrew	 Highest score:	15
 ANdrew	 Highest score:	74
+Aga	 Highest score:	45
