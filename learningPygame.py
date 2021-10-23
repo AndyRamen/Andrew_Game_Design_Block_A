@@ -48,6 +48,12 @@ if height<1001 and height>99 and width<1001 and width>99:
     wbox=50
     speed=5
     rect=pygame.Rect(width/2,height/2, wbox, hbox)
+    #Circle needs (x,y,radius) Radius is wbox/2
+    # xc = wbox/2
+    # yc = hbox/2
+    # r = hbox/2
+    # ball = pygame.circle(xc, yc, r)
+    # pygame.draw.circle(window, colors.get(str('blue')), ball)
     pygame.draw.rect(window, colors.get(str('blue')), rect)
     pointer= pygame.draw.rect(window, colors.get(str('blue')), rect)
     pygame.display.flip()
