@@ -136,31 +136,31 @@ while run:
     shapesTouched = False
     if xc >= rect.x and xc <= (rect.right):
         if (rect.y-yc) > 0 and (rect.y-yc) <= radius:
-            print("Touched on top edge")
+            #print("Touched on top edge")
             shapesTouched = True
         elif (yc - rect.bottom) > 0 and (yc - rect.bottom) <= radius:
-            print("Touched on bottom edge")
+            #print("Touched on bottom edge")
             shapesTouched = True
     elif yc >= rect.y and yc <= (rect.bottom):
         if (rect.x - xc) > 0 and (rect.x - xc) <= radius:
-            print("Touched on left edge")
+            #print("Touched on left edge")
             shapesTouched = True
         elif (xc - rect.right) > 0 and (xc - rect.right) <= radius:
-            print("Touched on right edge")
+            #print("Touched on right edge")
             shapesTouched = True
     elif (rect.x - xc) > 0 and (rect.x - xc) < radius:
         if (rect.y - yc) > 0 and (rect.y - yc) < radius:
-            print("Touched on top left corner")
+            #print("Touched on top left corner")
             shapesTouched = True
         elif (yc - rect.bottom) > 0 and (yc - rect.bottom) < radius:
-            print("Touched on bottom left corner")
+            #print("Touched on bottom left corner")
             shapesTouched = True
     elif (xc - rect.right) > 0 and (xc - rect.right) < radius:
         if (rect.y - yc) > 0 and (rect.y - yc) < radius:
-            print("Touched on top right corner")
+            #print("Touched on top right corner")
             shapesTouched = True
         elif (yc - rect.bottom) > 0 and (yc - rect.bottom) < radius:
-            print("Touched on bottom right corner")
+            #print("Touched on bottom right corner")
             shapesTouched = True
     else:
         continue
