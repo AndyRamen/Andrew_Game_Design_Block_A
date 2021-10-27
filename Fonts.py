@@ -55,9 +55,9 @@ while run:
             py.quit()
     window.fill((0,0,0))
     display_TITLE("--SETTINGS--")
-    display_message1("Background Color")
-    display_message2("Object Colors")
-    display_message3("Sound") 
+    display_message1("⨞ Background Color")
+    display_message2("⨞ Object Colors")
+    display_message3("⨞ Sound") 
     #py.time.delay(10000)
     py.display.update()
 
