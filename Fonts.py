@@ -94,20 +94,20 @@ def display_Menu():
         y += 80
         square.y = y
 
-def Display_back():
-    x = 200
-    y = 550
-    square.x = x
-    square.y = y
-    for i in range(0, len(messages)):
-        word = backMessage[i]
-        py.draw.rect(window, WHITE, square)
-        text = TITLE_FONT.render(word, 1, WHITE)
-        window.blit(text, (x+wbox+10, y))
-        py.display.flip()
-        py.time.delay(100)
-        y += 80
-        square.y = y
+# def Display_back():
+#     x = 200
+#     y = 550
+#     square.x = x
+#     square.y = y
+#     for i in range(0, len(messages)):
+#         word = backMessage[i]
+#         py.draw.rect(window, WHITE, square)
+#         text = TITLE_FONT.render(word, 1, WHITE)
+#         window.blit(text, (x+wbox+10, y))
+#         py.display.flip()
+#         py.time.delay(100)
+#         y += 80
+#         square.y = y
 
 def Settings_Menu():
     x = 40
