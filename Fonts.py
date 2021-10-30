@@ -5,7 +5,7 @@ from typing import Text
 import pygame as py, os, random, time
 
 py.init()
-menuMessages = ["Instructions", "Level 1", "Settings", "Exit"]
+menuMessages = ["Instructions", "Level 1", "Level 2", "Scoreboard", "Settings", "Exit"]
 messages = ["Background Color", "Object Color", "Sound on/off", "Screen Size"]
 backgroundColors = {'Green': (0,128,0), 'Orange': (255,165,0), 'Black': (0,0,0)}
 bkgColorMessage = ["Green", "Orange", "Black"]
@@ -22,14 +22,20 @@ DISPLAY_SETTINGS_BKGCOLOR = 4
 DISPLAY_SETTINGS_OBJCOLOR = 5
 DISPLAY_SETTINGS_SOUND = 6
 DISPLAY_SETTINGS_SCNSIZE = 7
+DISPLAY_LEVEL2 = 8
+DISPLAY_SCOREBOARD = 9
 currentDisplay = DISPLAY_MAIN_MENU
 width = 600
 height = 600
+# Can we build a list of Rects to store the main menu selection boxes?
+tempRect = py.Rect(0,0,5,5)
+mainMenuRectList = [tempRect]
+
 window = py.display.set_mode((width,height))
 py.display.set_caption("Menu Window")
 
 # TITLE_FONT = py.font.SysFont(name, size, bold=False, italic=False )
-TITLE_FONT = py.font.SysFont('Heveltica', 80)
+TITLE_FONT = py.font.SysFont('Heveltica', 50)
 SUBTITLE_FONT = py.font.SysFont('Heveltica', 40)
 wbox = 25
 hbox = 25
@@ -88,9 +94,13 @@ def display_Menu():
     y = 90
     square.x = x
     square.y = y
-    for i in range(0, len(messages)):
+    while len(mainMenuRectList) > 0:
+        mainMenuRectList.pop()
+
+    for i in range(0, len(menuMessages)):
         word = menuMessages[i]
-        py.draw.rect(window, WHITE, square)
+        currentMenuRect = py.draw.rect(window, WHITE, square)
+        mainMenuRectList.append(currentMenuRect)
         text = TITLE_FONT.render(word, 1, WHITE)
         window.blit(text, (x+wbox+10, y))
         py.display.flip()
@@ -127,6 +137,8 @@ def BKG_Color():
         py.time.delay(100)
         y += 80
         square.y = y
+
+
 #counter=0
 run = True
 bkgColor = BLACK
@@ -150,19 +162,38 @@ while run:
             print(py.mouse.get_pos())
 
             if currentDisplay == DISPLAY_MAIN_MENU:   
-                if mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 90 and mouse_pos[1] <= 114: #Clicked on instructions
+                #if mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 90 and mouse_pos[1] <= 114: #Clicked on instructions
+                if mainMenuRectList[0].collidepoint(mouse_pos[0], mouse_pos[1]):    
                     window.fill(bkgColor)
                     display_TITLE("Instructions:", 30)
                     display_subtitle("Back", 560)
                     currentDisplay = DISPLAY_INSTRUCTIONS
-                    #x = 270, 330 y = 560 580
-                elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 170 and mouse_pos[1] <=195: #Clicked on level 1
+                    py.display.update()
+                    #print("Main Menu: Clicked on Instructions")
+               #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 170 and mouse_pos[1] <=195: #Clicked on level 1
+                elif mainMenuRectList[1].collidepoint(mouse_pos[0], mouse_pos[1]):   
                     window.fill(bkgColor)
                     display_TITLE("Level 1", 30)
                     display_subtitle("Back", 560)
                     currentDisplay = DISPLAY_LEVEL1
-                #x: 40 65 y: 250 275
-                elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 250 and mouse_pos[1] <=275: #Clicked on settings
+                    py.display.update()
+                    #print("Main Menu: Clicked on Level 1")
+                elif mainMenuRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):   
+                    window.fill(bkgColor)
+                    display_TITLE("Level 2", 30)
+                    display_subtitle("Back", 560)
+                    currentDisplay = DISPLAY_LEVEL2
+                    py.display.update()
+                    #print("Main Menu: Clicked on Level 2")
+                elif mainMenuRectList[3].collidepoint(mouse_pos[0], mouse_pos[1]):   
+                    window.fill(bkgColor)
+                    display_TITLE("Scoreboard", 30)
+                    display_subtitle("Back", 560)
+                    currentDisplay = DISPLAY_SCOREBOARD
+                    py.display.update()
+                    #print("Main Menu: Clicked on Scoreboard")
+                #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 250 and mouse_pos[1] <=275: #Clicked on settings
+                elif mainMenuRectList[4].collidepoint(mouse_pos[0], mouse_pos[1]):
                     window.fill(bkgColor)
                     display_TITLE("--Settings--", 20)
                     Settings_Menu()
@@ -170,11 +201,14 @@ while run:
                     display_subtitle("Back", 560)
                     currentDisplay = DISPLAY_SETTINGS
                     py.display.set_caption("Settings Window")
-                elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 330 and mouse_pos[1] <= 355: #Clicked on exit
-                    #Clicked on Exit
+                    #print("Main Menu: Clicked on Settings")
+                #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 330 and mouse_pos[1] <= 355: #Clicked on exit
+                elif mainMenuRectList[5].collidepoint(mouse_pos[0], mouse_pos[1]):
+                    #print("Main Menu: Clicked on Exit")
                     run = False
             elif currentDisplay == DISPLAY_INSTRUCTIONS:
                 if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on instructions
+                    print("Instructions: Clicked on Back")
                     window.fill(bkgColor)
                     display_TITLE("--Main Menu--", 20)
                     display_Menu()
@@ -182,6 +216,23 @@ while run:
                     currentDisplay = DISPLAY_MAIN_MENU
             elif currentDisplay == DISPLAY_LEVEL1:
                 if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on level 1
+                    print("Level 1: Clicked on Back")
+                    window.fill(bkgColor)
+                    display_TITLE("--Main Menu--", 20)
+                    display_Menu()
+                    py.display.update()
+                    currentDisplay = DISPLAY_MAIN_MENU
+            elif currentDisplay == DISPLAY_LEVEL2:
+                if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on level 1
+                    print("Level 2: Clicked on Back")
+                    window.fill(bkgColor)
+                    display_TITLE("--Main Menu--", 20)
+                    display_Menu()
+                    py.display.update()
+                    currentDisplay = DISPLAY_MAIN_MENU
+            elif currentDisplay == DISPLAY_SCOREBOARD:
+                if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on level 1
+                    print("Scoreboard: Clicked on Back")
                     window.fill(bkgColor)
                     display_TITLE("--Main Menu--", 20)
                     display_Menu()
@@ -189,22 +240,23 @@ while run:
                     currentDisplay = DISPLAY_MAIN_MENU
             elif currentDisplay == DISPLAY_SETTINGS:
                 if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on settings
+                    print("Settings: Clicked on Back")
                     window.fill(bkgColor)
                     display_TITLE("--Main Menu--", 20)
                     display_Menu()
                     py.display.update()
                     currentDisplay = DISPLAY_MAIN_MENU
                     py.display.set_caption("Menu Window")
-                #x = 40 65 y = 90 115
                 elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 90 and mouse_pos[1] <= 115: #Clicked on bkg color
+                    print("Settings: Clicked on Background Color")
                     window.fill(bkgColor)
                     display_TITLE("Background Color", 20)
                     display_subtitle("Back", 560)
                     BKG_Color()
                     py.display.update()
                     currentDisplay = DISPLAY_SETTINGS_BKGCOLOR
-                #x = 40 65 y = 170 195
                 elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 170 and mouse_pos[1] <= 195: #Clicked on object color
+                    print("Settings: Clicked on Object Color")
                     window.fill(bkgColor)
                     display_TITLE("Object Color", 20)
                     display_subtitle("Back", 560)
@@ -252,6 +304,10 @@ while run:
                     display_subtitle("Back", 560)
                     py.display.update()
                     currentDisplay = DISPLAY_SETTINGS
+                else:
+                    continue
+            else:
+                continue
 
 
 
