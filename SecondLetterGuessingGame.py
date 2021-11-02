@@ -46,14 +46,14 @@ def Menu():
 
 def updateScoreFile():
     myFile= open('score.txt', 'a')
-    myFile.write(name + "\t Highest score:\t"+str(maxScore))
-    myFile.write("\n")
+    myFile.write(name + "\t Highest score:\t"+ str(maxScore) + "\n")
     myFile.close()
     #Updates scoreboard file
 
 def endGame():
     updateScoreFile()
-    print("So long, " + name + "!")
+    #print("So long, " + name + "!")
+    print("So long,", name, "!")
     os._exit(0)
     #Ends game
 
@@ -77,6 +77,11 @@ def wordSelection():
 
 animals=["tiger", "elephant", "lion"]
 fruits=["apple", "strawberry", "blueberry"]
+for i in range(0, len(animals)):
+    fruits.append(animals[i])
+print(fruits)
+
+
 compParts=["keyboard", "monitor", "case", "mouse"]
 name= input("What is your name? ")
 maxScore = 0
