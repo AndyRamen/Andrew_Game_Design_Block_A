@@ -8,6 +8,7 @@ py.init()
 menuMessages = ["Instructions", "Level 1", "Level 2", "Scoreboard", "Settings", "Exit"]
 messages = ["Background Color", "Object Color", "Sound on/off", "Screen Size"]
 backgroundColors = {'Green': (0,128,0), 'Orange': (255,165,0), 'Black': (0,0,0)}
+colors= {'red': (255,0,0), 'green':(0,255,0), 'blue':(0,0,255), 'purple':(150,0,150), 'black': (0,0,0)}
 bkgColorMessage = ["Green", "Orange", "Black"]
 #backMessage = ["wfoi", "Back"]
 GREEN = (90,128,0)
@@ -71,38 +72,6 @@ def display_subtitle (message, y):
     subtitleRect = window.blit(text, (x,y))
     py.display.update()
     return subtitleRect
-
-# def display_message1(message):
-#     #py.time.delay(100)
-#     text = subtitle.render(message, 1, WHITE )
-#    # window.blit(text, (width/2-text.get_width()/2, height/2-text.get_height()/2))
-#     window.blit(text, (width/2-text.get_width()/2, 90))
-#     py.display.update()
-#     #py.time.delay(100)
-
-# def display_message2(message):
-#     #py.time.delay(100)
-#     text = subtitle.render(message, 1, WHITE )
-#    # window.blit(text, (width/2-text.get_width()/2, height/2-text.get_height()/2))
-#     window.blit(text, (width/2-text.get_width()/2, 170))
-#     py.display.update()
-#     #py.time.delay(100)
-
-# def display_message3(message):
-#     #py.time.delay(100)
-#     text = subtitle.render(message, 4, WHITE )
-#    # window.blit(text, (width/2-text.get_width()/2, height/2-text.get_height()/2))
-#     window.blit(text, (width/2-text.get_width()/2, 250))
-#     py.display.update()
-#     #py.time.delay(100)
-
-# def display_message4(message):
-#     #py.time.delay(100)
-#     text = subtitle.render(message, 4, WHITE )
-#    # window.blit(text, (width/2-text.get_width()/2, height/2-text.get_height()/2))
-#     window.blit(text, (width/2-text.get_width()/2, 330))
-#     py.display.update()
-#     #py.time.delay(100)
 
 
 def display_Menu():
@@ -225,6 +194,50 @@ def display_Settings_ScrnSize():
     py.display.update()
     return DISPLAY_SETTINGS_SCNSIZE
 
+def rectMove():
+    window.fill(bkgColor) #Clear entire display window
+    py.display.flip()
+    #If rect is out of bounds, flip it to the other side of the display
+    if rect.y > height:
+        rect.y = 0
+    elif rect.y < 0:
+        rect.y = height - hbox
+    elif rect.x > width:
+        rect.x = 0
+    elif rect.x < 0:
+        rect.x = width - wbox
+    py.draw.rect(window, colors.get('blue'), rect) #Redraw rectangle
+    py.draw.circle(window, 'red', (xc,yc), radius) #Redraw circle
+    py.display.flip()
+
+def rectDelete(currentRect, newRadius):
+    window.fill(bkgColor)
+    py.display.flip()
+    py.draw.rect(window, colors.get('blue'), currentRect, -1) #Undraw original rectangle
+    py.draw.circle(window, 'red', (xc,yc), newRadius) #Redraw the circle where it is with the specified new radius
+    xRect2 = random.randint(0, width - wbox)
+    yRect2 = random.randint(0, height - hbox)
+    newRect = py.Rect(xRect2, yRect2, wbox, hbox)
+    py.draw.rect(window, colors.get('blue'), newRect) #Draw a new rectangle at a random position
+    py.display.flip()
+    return newRect
+
+def circleCheck(currentRadius):
+    #Pass current radius in and return new increased radius, but if it decides radius cannot be increased then return 0
+    newRadius = currentRadius + 10
+    if newRadius >= width/2 or newRadius >= height/2:
+        newRadius = 0
+    return newRadius
+
+xc = random.randint(25, 100)
+yc = random.randint(25, 100)
+radius = wbox/2
+rect = py.Rect(width/2, height/2, wbox, hbox)
+hbox=50 
+wbox=50
+speed=5
+
+
 #counter=0
 run = True
 bkgColor = BLACK
@@ -270,7 +283,7 @@ while run:
                     #if instructionBackRect.collidepoint(mouse_pos[0], mouse_pos[1]):
                         #print("Instructions: Clicked on Back")
                         currentDisplay = display_Menu()
-                elif currentDisplay == DISPLAY_LEVEL1:
+ 
                     if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on level 1
                         #print("Level 1: Clicked on Back")
                         currentDisplay = display_Menu()
@@ -331,6 +344,7 @@ while run:
                     continue
 
 py.display.quit
+#Hw 11/2/21: Add game into level 1
             
 #             if mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 90 and mouse_pos[1] <= 114:
 #                 window.fill(BLACK)
@@ -375,5 +389,114 @@ py.display.quit
     #counter +=1
     #Y increases downwards
     #X increases to the right
+
+# def display_message1(message):
+#     #py.time.delay(100)
+#     text = subtitle.render(message, 1, WHITE )
+#    # window.blit(text, (width/2-text.get_width()/2, height/2-text.get_height()/2))
+#     window.blit(text, (width/2-text.get_width()/2, 90))
+#     py.display.update()
+#     #py.time.delay(100)
+
+# def display_message2(message):
+#     #py.time.delay(100)
+#     text = subtitle.render(message, 1, WHITE )
+#    # window.blit(text, (width/2-text.get_width()/2, height/2-text.get_height()/2))
+#     window.blit(text, (width/2-text.get_width()/2, 170))
+#     py.display.update()
+#     #py.time.delay(100)
+
+# def display_message3(message):
+#     #py.time.delay(100)
+#     text = subtitle.render(message, 4, WHITE )
+#    # window.blit(text, (width/2-text.get_width()/2, height/2-text.get_height()/2))
+#     window.blit(text, (width/2-text.get_width()/2, 250))
+#     py.display.update()
+#     #py.time.delay(100)
+
+# def display_message4(message):
+#     #py.time.delay(100)
+#     text = subtitle.render(message, 4, WHITE )
+#    # window.blit(text, (width/2-text.get_width()/2, height/2-text.get_height()/2))
+#     window.blit(text, (width/2-text.get_width()/2, 330))
+#     py.display.update()
+#     #py.time.delay(100)
+
+
+
+
+            #    elif currentDisplay == DISPLAY_LEVEL1:
+            #         py.display.set_caption("My game Window")
+            #         py.display.flip()
+            #         hbox=50 
+            #         wbox=50
+            #         speed=5
+            #         rect = py.Rect(width/2, height/2, wbox, hbox)
+            #         xc = random.randint(25, 100)
+            #         yc = random.randint(25, 100)
+            #         radius = wbox/2
+            #         py.draw.rect(window, colors.get(str('blue')), rect)
+            #         circleRect = py.draw.circle(window, 'red', (xc,yc), radius)
+            #         py.display.flip()
+            #         keyPressed = py.key.get_pressed()
+            #         if keyPressed[py.K_UP]: #and rect.y-speed>=0:
+            #             rect.y -= speed
+            #             rectMove()
+            #         elif keyPressed[py.K_DOWN]: #and (rect.y+hbox+speed)<=height
+            #             rect.y += speed
+            #             rectMove()
+            #         elif keyPressed[py.K_RIGHT]: #and (rect.x+wbox+speed)<=width
+            #             rect.x += speed
+            #             rectMove()
+            #         elif keyPressed[py.K_LEFT]: #and rect.x-speed>=0:
+            #             rect.x -=speed
+            #             rectMove()
+            #         elif keyPressed[py.K_w] and (yc-speed-radius)>=0:
+            #             yc -= speed
+            #             rectMove()
+            #         elif keyPressed[py.K_a] and (xc-speed-radius)>=0:
+            #             xc -= speed
+            #             rectMove() 
+            #         elif keyPressed[py.K_s] and (yc+speed+radius)<=height:
+            #             yc +=speed
+            #             rectMove()
+            #         elif keyPressed[py.K_d] and (xc+speed+radius)<=width:
+            #             xc += speed
+            #             rectMove()
+            #         else:
+            #             continue
+
+            #         shapesTouched = False
+            #         if xc >= rect.x and xc <= (rect.right):
+            #             if (rect.y-yc) > 0 and (rect.y-yc) <= radius:
+            #                 #print("Touched on top edge")
+            #                 shapesTouched = True
+            #             elif (yc - rect.bottom) > 0 and (yc - rect.bottom) <= radius:
+            #                 #print("Touched on bottom edge")
+            #                 shapesTouched = True
+            #         elif yc >= rect.y and yc <= (rect.bottom):
+            #             if (rect.x - xc) > 0 and (rect.x - xc) <= radius:
+            #                 #print("Touched on left edge")
+            #                 shapesTouched = True
+            #             elif (xc - rect.right) > 0 and (xc - rect.right) <= radius:
+            #                 #print("Touched on right edge")
+            #                 shapesTouched = True
+            #         elif (rect.x - xc) > 0 and (rect.x - xc) < radius:
+            #             if (rect.y - yc) > 0 and (rect.y - yc) < radius:
+            #                 #print("Touched on top left corner")
+            #                 shapesTouched = True
+            #             elif (yc - rect.bottom) > 0 and (yc - rect.bottom) < radius:
+            #                 #print("Touched on bottom left corner")
+            #                 shapesTouched = True
+            #         elif (xc - rect.right) > 0 and (xc - rect.right) < radius:
+            #             if (rect.y - yc) > 0 and (rect.y - yc) < radius:
+            #                 #print("Touched on top right corner")
+            #                 shapesTouched = True
+            #             elif (yc - rect.bottom) > 0 and (yc - rect.bottom) < radius:
+            #                 #print("Touched on bottom right corner")
+            #                 shapesTouched = True
+            #         else:
+            #             continue
+
 
 
