@@ -134,6 +134,7 @@ def BKG_Color():
         square.y = y
 
 def display_Instructions():
+    global instructionBackRect
     window.fill(bkgColor)
     display_TITLE("Instructions:", 30)
     instructionBackRect = display_subtitle("Back", 560)
@@ -142,6 +143,7 @@ def display_Instructions():
     return DISPLAY_INSTRUCTIONS
 
 def display_Level1():
+    global level1BackRect
     window.fill(bkgColor)
     display_TITLE("Level 1", 30)
     level1BackRect = display_subtitle("Back", 560)
@@ -149,6 +151,7 @@ def display_Level1():
     return DISPLAY_LEVEL1
 
 def display_Level2():
+    global level2BackRect
     window.fill(bkgColor)
     display_TITLE("Level 2", 30)
     level2BackRect = display_subtitle("Back", 560)
@@ -156,6 +159,7 @@ def display_Level2():
     return DISPLAY_LEVEL2
 
 def display_Scoreboard():
+    global scoreboardBackRect
     window.fill(bkgColor)
     display_TITLE("Scoreboard", 30)
     scoreboardBackRect = display_subtitle("Back", 560)
@@ -163,6 +167,7 @@ def display_Scoreboard():
     return DISPLAY_SCOREBOARD
 
 def display_Settings():
+    global settingsBackRect
     window.fill(bkgColor)
     display_TITLE("--Settings--", 20)
     Settings_Menu()
@@ -229,6 +234,46 @@ def circleCheck(currentRadius):
         newRadius = 0
     return newRadius
 
+def MainMenuWin():
+    global currentDisplay
+    global mouse_pos
+    global run
+    global mouse_pos
+    global currentDisplay
+
+    if mainMenuRectList[0].collidepoint(mouse_pos[0], mouse_pos[1]):
+        currentDisplay = display_Instructions()    
+        #print("After display_instructions: rect", instructionBackRect.topleft, instructionBackRect.topright, instructionBackRect.bottomleft, instructionBackRect.bottomright)
+        print("Main Menu: Clicked on Instructions")
+    #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 170 and mouse_pos[1] <=195: #Clicked on level 1
+    elif mainMenuRectList[1].collidepoint(mouse_pos[0], mouse_pos[1]):   
+        currentDisplay = display_Level1()
+        #print("Main Menu: Clicked on Level 1")
+    elif mainMenuRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):   
+        currentDisplay = display_Level2()
+        #print("Main Menu: Clicked on Level 2")
+    elif mainMenuRectList[3].collidepoint(mouse_pos[0], mouse_pos[1]):   
+        currentDisplay = display_Scoreboard()
+        #print("Main Menu: Clicked on Scoreboard")
+    #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 250 and mouse_pos[1] <=275: #Clicked on settings
+    elif mainMenuRectList[4].collidepoint(mouse_pos[0], mouse_pos[1]):
+        currentDisplay = display_Settings()
+        #print("Main Menu: Clicked on Settings")
+    #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 330 and mouse_pos[1] <= 355: #Clicked on exit
+    elif mainMenuRectList[5].collidepoint(mouse_pos[0], mouse_pos[1]):
+        #print("Main Menu: Clicked on Exit")
+        run = False
+
+def backButtonToMenu():
+    global currentDisplay
+    if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: 
+        currentDisplay = display_Menu()
+
+def backButtonToSettings():
+    global currentDisplay
+    if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580:
+        currentDisplay = display_Settings()
+
 xc = random.randint(25, 100)
 yc = random.randint(25, 100)
 radius = wbox/2
@@ -255,54 +300,27 @@ while run:
                 print(mouse_pos)
 
                 if currentDisplay == DISPLAY_MAIN_MENU:   
-                    #if mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 90 and mouse_pos[1] <= 114: #Clicked on instructions
-                    if mainMenuRectList[0].collidepoint(mouse_pos[0], mouse_pos[1]):
-                        currentDisplay = display_Instructions()    
-                        #print("After display_instructions: rect", instructionBackRect.topleft, instructionBackRect.topright, instructionBackRect.bottomleft, instructionBackRect.bottomright)
-                        #print("Main Menu: Clicked on Instructions")
-                    #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 170 and mouse_pos[1] <=195: #Clicked on level 1
-                    elif mainMenuRectList[1].collidepoint(mouse_pos[0], mouse_pos[1]):   
-                        currentDisplay = display_Level1()
-                        #print("Main Menu: Clicked on Level 1")
-                    elif mainMenuRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):   
-                        currentDisplay = display_Level2()
-                        #print("Main Menu: Clicked on Level 2")
-                    elif mainMenuRectList[3].collidepoint(mouse_pos[0], mouse_pos[1]):   
-                        currentDisplay = display_Scoreboard()
-                        #print("Main Menu: Clicked on Scoreboard")
-                    #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 250 and mouse_pos[1] <=275: #Clicked on settings
-                    elif mainMenuRectList[4].collidepoint(mouse_pos[0], mouse_pos[1]):
-                        currentDisplay = display_Settings()
-                        #print("Main Menu: Clicked on Settings")
-                    #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 330 and mouse_pos[1] <= 355: #Clicked on exit
-                    elif mainMenuRectList[5].collidepoint(mouse_pos[0], mouse_pos[1]):
-                        #print("Main Menu: Clicked on Exit")
-                        run = False
+                    MainMenuWin()
                 elif currentDisplay == DISPLAY_INSTRUCTIONS:
-                    if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on instructions
+                    backButtonToMenu()#Clicked on back on instructions
                     #if instructionBackRect.collidepoint(mouse_pos[0], mouse_pos[1]):
                         #print("Instructions: Clicked on Back")
-                        currentDisplay = display_Menu()
  
-                    if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on level 1
-                        #print("Level 1: Clicked on Back")
-                        currentDisplay = display_Menu()
+                        #print("Level 1: Clicked on Back
                 elif currentDisplay == DISPLAY_LEVEL1:
-                    if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: 
-                        currentDisplay = display_Menu()
+                    backButtonToMenu()
+                    #clicked on level 1 back
                 elif currentDisplay == DISPLAY_LEVEL2:
-                    if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on level 1
+                    backButtonToMenu() #Clicked on back on level 1
                         #print("Level 2: Clicked on Back")
-                        currentDisplay = display_Menu()
                 elif currentDisplay == DISPLAY_SCOREBOARD:
-                    if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on level 1
+                    backButtonToMenu()#Clicked on back on level 1
                         #print("Scoreboard: Clicked on Back")
-                        currentDisplay = display_Menu()
+
                 elif currentDisplay == DISPLAY_SETTINGS:
-                    if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on settings
+                    backButtonToMenu()#Clicked on back on settings
                         #print("Settings: Clicked on Back")
-                        currentDisplay = display_Menu()
-                    elif settingsRectList[0].collidepoint(mouse_pos[0], mouse_pos[1]):
+                    if settingsRectList[0].collidepoint(mouse_pos[0], mouse_pos[1]):
                     #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 90 and mouse_pos[1] <= 115: #Clicked on bkg color
                         #print("Settings: Clicked on Background Color")
                         currentDisplay = display_Background_Colors()
@@ -318,31 +336,30 @@ while run:
                     else:
                         continue
                 elif currentDisplay == DISPLAY_SETTINGS_SCNSIZE:
-                    if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580:
-                        currentDisplay = display_Settings()
+                    backButtonToSettings()
                 elif currentDisplay == DISPLAY_SETTINGS_OBJCOLOR:
-                    if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked back on object color
+                    backButtonToSettings() #Clicked back on object color
                         #print("Settings/Object Color: Clicked on Back")
-                        currentDisplay = display_Settings()
                 elif currentDisplay == DISPLAY_SETTINGS_BKGCOLOR:
                     BKG_Color()
                     py.display.update
+                    backButtonToSettings()
                     if backgroundColorsRectList[0].collidepoint(mouse_pos[0], mouse_pos[1]):
                     #if mouse_pos[0] >= 40 and mouse_pos[0] <= 90 and mouse_pos[1] >= 90 and mouse_pos[1] <= 115: #Changes color to green
                         bkgColor = GREEN
                         currentDisplay = display_Background_Colors()
-                    if backgroundColorsRectList[1].collidepoint(mouse_pos[0], mouse_pos[1]):
+                    elif backgroundColorsRectList[1].collidepoint(mouse_pos[0], mouse_pos[1]):
                     #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 170 and mouse_pos[1] <= 195: #Changes color to orange
                         bkgColor = ORANGE
                         currentDisplay = display_Background_Colors()
-                    if backgroundColorsRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):
+                    elif backgroundColorsRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):
                     #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 250 and mouse_pos[1] <= 275: #Changes color to black
                         bkgColor = BLACK
                         currentDisplay = display_Background_Colors()
-                    elif mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on bkg color
-                        currentDisplay = display_Settings()
+                    #Clicked on back on bkg color
                     else:
                         continue
+
                 else:
                     continue
 
