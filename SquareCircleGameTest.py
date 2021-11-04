@@ -10,6 +10,7 @@ messages = ["Background Color", "Object Color", "Sound on/off", "Screen Size"]
 backgroundColors = {'Green': (0,128,0), 'Orange': (255,165,0), 'Black': (0,0,0)}
 colors= {'red': (255,0,0), 'green':(0,255,0), 'blue':(0,0,255), 'purple':(150,0,150), 'black': (0,0,0)}
 bkgColorMessage = ["Green", "Orange", "Black"]
+screenSizeMessage = ["300 x 300", "600 x 600", "800 x 800"]
 #backMessage = ["wfoi", "Back"]
 GREEN = (90,128,0)
 BLACK = (0,0,0)
@@ -28,6 +29,7 @@ DISPLAY_SCOREBOARD = 9
 currentDisplay = DISPLAY_MAIN_MENU
 width = 600
 height = 600
+windowSize = (width,height)
 # Define a list of Rects to store the main menu selection boxes
 tempRect = py.Rect(0,0,5,5)
 mainMenuRectList = [tempRect]
@@ -36,6 +38,7 @@ settingsRectList = [tempRect]
 # Define a list of Rects to store the Background Color selection boxes
 backgroundColorsRectList = [tempRect]
 # Define rect variables for each window's Back button
+screenSizeRectList = [tempRect]
 instructionBackRect = py.Rect(5,5,5,5)
 level1BackRect = py.Rect(10,10,5,5)
 settingsBackRect = py.Rect(15,15,5,5)
@@ -46,7 +49,7 @@ scoreboardBackRect = py.Rect(35,35,5,5)
 soundBackRect = py.Rect(40,40,5,5)
 screenSizeBackRect = py.Rect(45,45,5,5)
 
-window = py.display.set_mode((width,height))
+window = py.display.set_mode((windowSize))
 py.display.set_caption("Menu Window")
 
 # TITLE_FONT = py.font.SysFont(name, size, bold=False, italic=False )
@@ -193,11 +196,30 @@ def display_Object_Colors():
     return DISPLAY_SETTINGS_OBJCOLOR
 
 def display_Settings_ScrnSize():
+    global screenSizeBackRect
     window.fill(bkgColor)
     display_TITLE("Screen Size", 20)
     screenSizeBackRect = display_subtitle("Back", 560)
     py.display.update()
     return DISPLAY_SETTINGS_SCNSIZE
+
+def scrn_Size():
+    x = 40
+    y = 90
+    square.x = x
+    square.y = y
+    while len(screenSizeRectList) > 0:
+        screenSizeRectList.pop() #Clear the list to star afresh
+    for i in range(0,len(screenSizeMessage)):
+        word = screenSizeMessage[i]
+        currentScreenSizeRect = py.draw.rect(window, WHITE, square)
+        screenSizeRectList.append(currentScreenSizeRect)
+        text = TITLE_FONT.render(word, 1, WHITE)
+        window.blit(text, (x+wbox+10, y))
+        py.display.flip()
+        #py.time.delay(100)
+        y += 80
+        square.y = y
 
 def rectMove():
     window.fill(bkgColor) #Clear entire display window
@@ -336,6 +358,7 @@ while run:
                     else:
                         continue
                 elif currentDisplay == DISPLAY_SETTINGS_SCNSIZE:
+                    scrn_Size()
                     backButtonToSettings()
                 elif currentDisplay == DISPLAY_SETTINGS_OBJCOLOR:
                     backButtonToSettings() #Clicked back on object color
