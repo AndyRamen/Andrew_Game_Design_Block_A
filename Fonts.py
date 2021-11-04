@@ -287,6 +287,9 @@ while run:
                     if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on level 1
                         #print("Level 1: Clicked on Back")
                         currentDisplay = display_Menu()
+                elif currentDisplay == DISPLAY_LEVEL1:
+                    if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: 
+                        currentDisplay = display_Menu()
                 elif currentDisplay == DISPLAY_LEVEL2:
                     if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: #Clicked on back on level 1
                         #print("Level 2: Clicked on Back")
