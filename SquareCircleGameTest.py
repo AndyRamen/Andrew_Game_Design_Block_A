@@ -27,6 +27,8 @@ DISPLAY_SETTINGS_SCNSIZE = 7
 DISPLAY_LEVEL2 = 8
 DISPLAY_SCOREBOARD = 9
 currentDisplay = DISPLAY_MAIN_MENU
+global width
+global height
 width = 600
 height = 600
 windowSize = (width,height)
@@ -355,11 +357,27 @@ while run:
                     elif settingsRectList[3].collidepoint(mouse_pos[0], mouse_pos[1]):
                         #print("Settings: Clicked on Screen Size")
                         currentDisplay = display_Settings_ScrnSize()
+                        scrn_Size()
                     else:
                         continue
                 elif currentDisplay == DISPLAY_SETTINGS_SCNSIZE:
                     scrn_Size()
                     backButtonToSettings()
+                    if screenSizeRectList[0].collidepoint(mouse_pos[0], mouse_pos[1]):
+                        #windowSize = (300,300)
+                        print("touched 300x300")
+                        width = 300
+                        height = 300
+                        windowSize = (300,300)
+                    if screenSizeRectList[1].collidepoint(mouse_pos[0], mouse_pos[1]):
+                        print ("touched 600x600")
+                        width = 600
+                        height = 600
+                    if screenSizeRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):
+                        print("touched 800x800")
+                        width = 800
+                        height = 800
+
                 elif currentDisplay == DISPLAY_SETTINGS_OBJCOLOR:
                     backButtonToSettings() #Clicked back on object color
                         #print("Settings/Object Color: Clicked on Back")
