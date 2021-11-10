@@ -99,12 +99,6 @@ while run:
     else:
         if jumpCount >= -10:
             newYCoord = square.y - jumpCount* abs(jumpCount)*0.5
-            # if (newYCoord+hbox)>boulder.y and square.x>=boulder.x and square.x<(boulder.x+boulder.width):
-            #     #If red square is on top of boulder and would land past the top boulder, make it stop right on top of boulder
-            #     square.y = boulder.y - hbox
-            #     jumpCount = 10
-            #     Jumping = False
-            # else: 
             square.y = newYCoord
             jumpCount -= 1
         else:
