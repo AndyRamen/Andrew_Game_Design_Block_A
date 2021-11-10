@@ -405,6 +405,8 @@ while run:
                     continue
 
 py.display.quit
+#Avatars need to be 64x64 and divisible by 3
+#Jump is false, but if spaecbar is pressed then jump = true
 #Hw 11/2/21: Add game into level 1
             
 #             if mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 90 and mouse_pos[1] <= 114:

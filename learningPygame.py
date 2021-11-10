@@ -64,7 +64,8 @@ else:
     print("Wrong")
     run=False
     
-
+Jumping = False
+jumpCount = 10
     #main loop for the game:
 while run:
     pygame.time.delay(20)
