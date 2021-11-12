@@ -31,7 +31,7 @@ boulder = py.Rect(width-300, height-200, 100, 200)
 colors = {'red':(150,0,0),'green':(0,200,0), 'blue':(0,0,255), 'purple':(150, 0, 150), 'white':(255,255,255), 'black':(0,0,0) }
 screen=py.display.set_mode((width, height))
 myColor= colors.get('black')
-bg = py.image.load("GameImages\\800x800space image.jpg")
+bg = py.image.load('GameImages\Pygame-Tutorials-master\Pygame-Tutorials-master\Game\\bg.jpg')
 screen.blit(bg, (0,0))
 #screen.fill(myColor)
 py.display.set_caption("Moving Square")
@@ -43,10 +43,10 @@ y=height/2
 wbox=50
 hbox=50
 
-walkRight = [py.image.load("GameImages\\Pygame-Tutorials-master\\Game\\R1.png"), py.image.load('R2.png'), py.image.load('R3.png'), py.image.load('R4.png'), py.image.load('R5.png'), py.image.load('R6.png'), py.image.load('R7.png'), py.image.load('R8.png'), py.image.load('R9.png')]
-walkLeft = [py.image.load('L1.png'), py.image.load('L2.png'), py.image.load('L3.png'), py.image.load('L4.png'), py.image.load('L5.png'), py.image.load('L6.png'), py.image.load('L7.png'), py.image.load('L8.png'), py.image.load('L9.png')]
-bg = py.image.load('bg.jpg')
-char = py.image.load('standing.png')
+walkRight = [py.image.load('GameImages\Pygame-Tutorials-master\Pygame-Tutorials-master\Game\R1.png')]#, py.image.load('R2.png'), py.image.load('R3.png'), py.image.load('R4.png'), py.image.load('R5.png'), py.image.load('R6.png'), py.image.load('R7.png'), py.image.load('R8.png'), py.image.load('R9.png')]
+walkLeft = [py.image.load('GameImages\Pygame-Tutorials-master\Pygame-Tutorials-master\Game\L1.png')]#, py.image.load('L2.png'), py.image.load('L3.png'), py.image.load('L4.png'), py.image.load('L5.png'), py.image.load('L6.png'), py.image.load('L7.png'), py.image.load('L8.png'), py.image.load('L9.png')]
+bg = py.image.load('GameImages\Pygame-Tutorials-master\Pygame-Tutorials-master\Game\\bg.jpg')
+char = py.image.load('GameImages\Pygame-Tutorials-master\Pygame-Tutorials-master\Game\standing.png')
 #creating object square and the boulder obstacle
 square=py.Rect(x,y,wbox, hbox )
 objColor=colors.get('red')
@@ -59,23 +59,25 @@ speed = 10
 run=True #Variable to control the main loop
 #boolean to check for jump
 Jumping=False
-clock = py.time.clock
+clock = py.time.Clock()
 
 def redrawGameWindow():
     global walkCount
-    bg = py.image.load("GameImages\\800x800space image.jpg")
+    x = 50
+    y = 400
+    bg = py.image.load('GameImages\Pygame-Tutorials-master\Pygame-Tutorials-master\Game\\bg.jpg')
     screen.blit(bg, (0,0))
-    py.draw.rect(screen, objColor, square)
+    #py.draw.rect(screen, objColor, square)
     py.draw.rect(screen, boulderColor, boulder)
     py.display.flip()
 
     if walkCount +1 >= 27:
         walkCount = 0
     if left:
-        screen.blit(walkLeft(walkCount//3))
+        screen.blit(walkLeft[walkCount//3], (x,y))
         walkCount += 1
     elif right:
-        screen.blit(walkRight(walkCount//3))
+        screen.blit(walkRight[walkCount//3], (x,y))
         walkCount += 1
     else: 
         screen.blit(char, (x,y))
@@ -164,10 +166,10 @@ while run:
     #     move = True
     # if square.y >= width >= 300:
     #screen.fill(myColor)
-    bg = py.image.load("GameImages\\800x800space image.jpg")
-    screen.blit(bg, (0,0))
-    py.draw.rect(screen, objColor, square)
-    py.draw.rect(screen, boulderColor, boulder)
-    py.display.flip()
+    # bg = py.image.load('GameImages\Pygame-Tutorials-master\Pygame-Tutorials-master\Game\\bg.jpg')
+    # screen.blit(bg, (0,0))
+    # py.draw.rect(screen, objColor, square)
+    # py.draw.rect(screen, boulderColor, boulder)
+    # py.display.flip()
 
 py.quit()
