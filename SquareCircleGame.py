@@ -52,6 +52,7 @@ py.display.set_caption("Menu Window")
 # TITLE_FONT = py.font.SysFont(name, size, bold=False, italic=False )
 TITLE_FONT = py.font.SysFont('Heveltica', 50)
 SUBTITLE_FONT = py.font.SysFont('Heveltica', 40)
+TEXT_FONT = py.font.SysFont('Heveltica', 25)
 wbox = 25
 hbox = 25
 square = py.Rect(10,10, wbox, hbox)
@@ -68,6 +69,14 @@ def display_TITLE(message, y):
 def display_subtitle (message, y):
     py.time.delay(100)
     text = SUBTITLE_FONT.render(message, 1, WHITE)
+    x = width/2 - text.get_width()/2
+    subtitleRect = window.blit(text, (x,y))
+    py.display.update()
+    return subtitleRect
+
+def display_text (message, y):
+    py.time.delay(100)
+    text = TEXT_FONT.render(message, 1, WHITE)
     x = width/2 - text.get_width()/2
     subtitleRect = window.blit(text, (x,y))
     py.display.update()
@@ -138,25 +147,48 @@ def display_Instructions():
     window.fill(bkgColor)
     display_TITLE("Instructions:", 30)
     instructionBackRect = display_subtitle("Back", 560)
-    #print("Inside display_instructions: rect", instructionBackRect.topleft, instructionBackRect.topright, instructionBackRect.bottomleft, instructionBackRect.bottomright)
+    display_text("Aliens are invading our planet!", 80)
+    display_text("Protect the planet until everyone has fully evacuted. Good luck.", 110)
+    display_subtitle("--Controls--", 180)
+    display_text("Left arrow key: Move left", 210)
+    display_text("Right arrow key: Move right", 230)
+    display_text("Spacebar: Shoot", 250)
     py.display.update()
     return DISPLAY_INSTRUCTIONS
 
 def display_Level1():
     global level1BackRect
-    window.fill(bkgColor)
-    display_TITLE("Level 1", 30)
-    level1BackRect = display_subtitle("Back", 560)
-    py.display.update()
+    #window.fill(bkgColor)
+    # display_TITLE("Level 1", 30)
+    # level1BackRect = display_subtitle("Back", 560)
+    level1_Game()
+    #Call score function here
     return DISPLAY_LEVEL1
+
+def level1_Game():
+    bg1 = py.image.load('GameImages\purple space.jpg')
+    window.blit(bg1, (0,0))
+    #screen.fill(myColor)
+    py.display.set_caption("Space Invaders Level 1")
+    level1BackRect = display_subtitle("Quit", 560)
+    py.display.flip()
+    #Add logic/game code here
 
 def display_Level2():
     global level2BackRect
-    window.fill(bkgColor)
-    display_TITLE("Level 2", 30)
-    level2BackRect = display_subtitle("Back", 560)
-    py.display.update()
+    # window.fill(bkgColor)
+    # display_TITLE("Level 2", 30)
+    # level2BackRect = display_subtitle("Back", 560)
+    # py.display.update()
+    level2_Game()
     return DISPLAY_LEVEL2
+
+def level2_Game():
+    bg2 = py.image.load('GameImages\\asteroid field.jpg')
+    window.blit(bg2, (0,0))
+    py.display.set_caption("Space Invaders Level 2")
+    level2BackRect = display_subtitle("Quit", 560)
+    py.display.flip()
 
 def display_Scoreboard():
     global scoreboardBackRect
