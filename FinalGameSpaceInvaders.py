@@ -91,7 +91,7 @@ def display_Menu():
     while len(mainMenuRectList) > 0:
         mainMenuRectList.pop() #Clear the list to star afresh
     window.fill(bkgColor)
-    display_TITLE("--Main Menu--", 20)
+    display_TITLE("--Space Invaders--", 20)
     for i in range(0, len(menuMessages)):
         word = menuMessages[i]
         currentMenuRect = py.draw.rect(window, WHITE, square)
