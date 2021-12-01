@@ -6,7 +6,8 @@ import pygame as py, os, random, time
 
 py.init()
 menuMessages = ["Instructions", "Level 1", "Level 2", "Scoreboard", "Settings", "Exit"]
-messages = ["Background Color", "Object Color", "Sound on/off", "Screen Size"]
+messages = ["Background Color", "Screen Size"]
+screenSizeMessages = ["600x600", "800x800", "900x900"]
 backgroundColors = {'Green': (0,128,0), 'Orange': (255,165,0), 'Black': (0,0,0)}
 colors= {'red': (255,0,0), 'green':(0,255,0), 'blue':(0,0,255), 'purple':(150,0,150), 'black': (0,0,0)}
 bkgColorMessage = ["Green", "Orange", "Black"]
@@ -36,6 +37,7 @@ settingsRectList = [tempRect]
 # Define a list of Rects to store the Background Color selection boxes
 backgroundColorsRectList = [tempRect]
 # Define rect variables for each window's Back button
+screenSizeRectList = [tempRect]
 instructionBackRect = py.Rect(5,5,5,5)
 level1BackRect = py.Rect(10,10,5,5)
 settingsBackRect = py.Rect(15,15,5,5)
@@ -117,6 +119,24 @@ def Settings_Menu():
         word = messages[i]
         currentSettingRect = py.draw.rect(window, WHITE, square)
         settingsRectList.append(currentSettingRect) #Store all setting menu rects in a list
+        text = TITLE_FONT.render(word, 1, WHITE)
+        window.blit(text, (x+wbox+10, y))
+        py.display.flip()
+        py.time.delay(100)
+        y += 80
+        square.y = y
+
+def ScreenSize_Menu():
+    x = 40
+    y = 90
+    square.x = x
+    square.y = y
+    while len(screenSizeRectList) > 0:
+        screenSizeRectList.pop() #Clear the list to star afresh
+    for i in range(0, len(screenSizeMessages)):
+        word = screenSizeMessages[i]
+        currentScreenSizeRect = py.draw.rect(window, WHITE, square)
+        screenSizeRectList.append(currentScreenSizeRect) #Store all setting menu rects in a list
         text = TITLE_FONT.render(word, 1, WHITE)
         window.blit(text, (x+wbox+10, y))
         py.display.flip()
@@ -217,54 +237,20 @@ def display_Background_Colors():
     py.display.update()
     return DISPLAY_SETTINGS_BKGCOLOR
 
-def display_Object_Colors():
-    window.fill(bkgColor)
-    display_TITLE("Object Color", 20)
-    objectColorBackRect = display_subtitle("Back", 560)
-    py.display.update()
-    return DISPLAY_SETTINGS_OBJCOLOR
+# def display_Object_Colors():
+#     window.fill(bkgColor)
+#     display_TITLE("Object Color", 20)
+#     objectColorBackRect = display_subtitle("Back", 560)
+#     py.display.update()
+#     return DISPLAY_SETTINGS_OBJCOLOR
 
 def display_Settings_ScrnSize():
     window.fill(bkgColor)
     display_TITLE("Screen Size", 20)
     screenSizeBackRect = display_subtitle("Back", 560)
+    ScreenSize_Menu()
     py.display.update()
     return DISPLAY_SETTINGS_SCNSIZE
-
-def rectMove():
-    window.fill(bkgColor) #Clear entire display window
-    py.display.flip()
-    #If rect is out of bounds, flip it to the other side of the display
-    if rect.y > height:
-        rect.y = 0
-    elif rect.y < 0:
-        rect.y = height - hbox
-    elif rect.x > width:
-        rect.x = 0
-    elif rect.x < 0:
-        rect.x = width - wbox
-    py.draw.rect(window, colors.get('blue'), rect) #Redraw rectangle
-    py.draw.circle(window, 'red', (xc,yc), radius) #Redraw circle
-    py.display.flip()
-
-def rectDelete(currentRect, newRadius):
-    window.fill(bkgColor)
-    py.display.flip()
-    py.draw.rect(window, colors.get('blue'), currentRect, -1) #Undraw original rectangle
-    py.draw.circle(window, 'red', (xc,yc), newRadius) #Redraw the circle where it is with the specified new radius
-    xRect2 = random.randint(0, width - wbox)
-    yRect2 = random.randint(0, height - hbox)
-    newRect = py.Rect(xRect2, yRect2, wbox, hbox)
-    py.draw.rect(window, colors.get('blue'), newRect) #Draw a new rectangle at a random position
-    py.display.flip()
-    return newRect
-
-def circleCheck(currentRadius):
-    #Pass current radius in and return new increased radius, but if it decides radius cannot be increased then return 0
-    newRadius = currentRadius + 10
-    if newRadius >= width/2 or newRadius >= height/2:
-        newRadius = 0
-    return newRadius
 
 def MainMenuWin():
     global currentDisplay
@@ -359,19 +345,34 @@ while run:
                     elif settingsRectList[1].collidepoint(mouse_pos[0], mouse_pos[1]):
                     #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 170 and mouse_pos[1] <= 195: #Clicked on object color
                         #print("Settings: Clicked on Object Color")
-                        currentDisplay = display_Object_Colors()
-                    elif settingsRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):
-                        print("Settings: Clicked on Sound On/Off")
-                    elif settingsRectList[3].collidepoint(mouse_pos[0], mouse_pos[1]):
-                        #print("Settings: Clicked on Screen Size")
                         currentDisplay = display_Settings_ScrnSize()
+                    # elif settingsRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):
+                    #     currentDisplay = display_Settings_ScrnSize()
+                    # elif settingsRectList[3].collidepoint(mouse_pos[0], mouse_pos[1]):
+                    #     #print("Settings: Clicked on Screen Size")
+                    #     currentDisplay = display_Settings_ScrnSize()
                     else:
                         continue
                 elif currentDisplay == DISPLAY_SETTINGS_SCNSIZE:
+                    ScreenSize_Menu()
                     backButtonToSettings()
-                elif currentDisplay == DISPLAY_SETTINGS_OBJCOLOR:
-                    backButtonToSettings() #Clicked back on object color
-                        #print("Settings/Object Color: Clicked on Back")
+                    if screenSizeRectList[0].collidepoint(mouse_pos[0], mouse_pos[1]):
+                        width = 600
+                        height = 600
+                        window = py.display.set_mode((width, height))
+                    elif screenSizeRectList[1].collidepoint(mouse_pos[0], mouse_pos[1]):
+                        width = 800
+                        height = 800
+                        window = py.display.set_mode((width, height))
+                    elif screenSizeRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):
+                        width = 900
+                        height = 900
+                        window = py.display.set_mode((width, height))
+                    else:
+                        continue
+                # elif currentDisplay == DISPLAY_SETTINGS_OBJCOLOR:
+                #     backButtonToSettings() #Clicked back on object color
+                #         #print("Settings/Object Color: Clicked on Back")
                 elif currentDisplay == DISPLAY_SETTINGS_BKGCOLOR:
                     BKG_Color()
                     py.display.update
