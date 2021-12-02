@@ -188,9 +188,26 @@ def display_Level1():
 def level1_Game():
     bg1 = py.image.load('GameImages\purple space.jpg')
     window.blit(bg1, (0,0))
+    targetCount = 10
+    target1 = py.image.load('GameImages\enemy ship 2Resized.png')
+    target2 = py.image.load('GameImages\enemy ship 1Resized.png')
+    target3 = target1
+    target4 = target2
+    target5 = target1
+    target6 = target2
+    target7 = target1
+    target8 = target2
+    target9 = target1
+    target10 = target2
+    window.blit(target1, (0,0))
+    window.blit(target2, (50,0))
+    hVelocity = 5
+    vVelocity = 5
     #screen.fill(myColor)
     py.display.set_caption("Space Invaders Level 1")
     level1BackRect = display_subtitle("Quit", 560)
+    spaceship = py.image.load('GameImages\mainshipResized.png')
+    window.blit(spaceship, (50, 500))
     py.display.flip()
     #Add logic/game code here
 
@@ -284,8 +301,9 @@ def MainMenuWin():
 
 def backButtonToMenu():
     global currentDisplay
-    if mouse_pos[0] >= 270 and mouse_pos[0] <= 330 and mouse_pos[1] >= 560 and mouse_pos[1] <= 580: 
+    if mouse_pos[0] >= width - 330 and mouse_pos[0] <= width - 270 and mouse_pos[1] >= height - 40 and mouse_pos[1] <= height - 20: 
         currentDisplay = display_Menu()
+        #800x800: 
 
 def backButtonToSettings():
     global currentDisplay
