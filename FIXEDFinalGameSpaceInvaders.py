@@ -212,18 +212,48 @@ def level1_Game():
     window.blit(target1, (630,5))
     hVelocity = 5
     vVelocity = 5
-    targetResetFreq = 5
+    targetRefreshFreq = 5
 	# loop through (number of targets - 1): #because first target is almost in the list
 	# 	create a target rect sized based on a predefined image appropriate for gameLevel
 	# 	position the target rect a set distance from the previous rect in targetList
 	# 	append the new target rect to targetList
 	# end loop
+    target1LeftMostRect = py.Rect(width - 670, height - 695, 50, 50)
+    target1RightMostRect = py.Rect(width - 70, height - 695, 50, 50)
     spaceshipRect = py.Rect(width - 650, height - 100, 50, 50)
-    targetlist = [target1Special]
+    targetlist = [target1LeftMostRect]
+    bulletRectList = []
+    continuegame = True
+    loopcount = 0
+    hDirection = "right"
+    moveDown = False
+    totalScore = 0
     #screen.fill(myColor)
-    py.display.set_caption("Space Invaders Level 1")
+    #py.display.set_caption("Space Invaders Level 1")
     level1BackRect = display_subtitle("Quit", 660)
     py.display.flip()
+    while continuegame:
+        if len(targetlist) == 0:
+            ScoreFile = open('SpaceInvadersScore.txt', 'a')
+            ScoreFile.write("\n The Score: \t" + str(totalScore))
+        loopcount += 1
+        if loopcount == targetRefreshFreq:
+            advanceTargets = True
+            loopcount = 0
+        else:
+            advanceTargets = False
+	    #clear the display window so everything can be redrawn
+
+        if hDirection == "right": 
+            if target1RightMostRect + 5 > width:
+				#move down and start moving left
+                hDirection = "left"
+                moveDown = True
+            else: 
+                moveDown = False
+
+
+
     #Add logic/game code here
 
 def display_Level2():
