@@ -244,13 +244,13 @@ def level1_Game():
             advanceTargets = False
 	    #clear the display window so everything can be redrawn
 
-        if hDirection == "right": 
-            if target1RightMostRect + 5 > width:
-				#move down and start moving left
-                hDirection = "left"
-                moveDown = True
-            else: 
-                moveDown = False
+        # if hDirection == "right": 
+        #     if target1RightMostRect + 5 > width:
+		# 		#move down and start moving left
+        #         hDirection = "left"
+        #         moveDown = True
+        #     else: 
+        #         moveDown = False
 
 
 
