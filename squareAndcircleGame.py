@@ -106,6 +106,7 @@ while run:
     #x,y=pygame.mouse.get_pos()
     #print("("+ str(x)+ " , "+str(y)+" )")
     keyPressed = pygame.key.get_pressed()
+    pygame.time.clock.tick(27)
     if keyPressed[pygame.K_UP]: #and rect.y-speed>=0:
         rect.y -= speed
         rectMove()

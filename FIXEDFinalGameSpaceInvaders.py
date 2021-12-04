@@ -63,11 +63,11 @@ bulletWidth = 2
 bulletHeight = 5
 bulletColor = (255,0,0)
 spaceShipRect = py.Rect(0,0,20,20)
-spaceShipVel = 1
+spaceShipVel = 15
 
 #define defauly horizontal and vertical target movement speeds
 targetHVel = 1
-targetVVel = 10
+targetVVel = 15
 targetDirection = 1 #1 to move right and -1 to move left
 TARGET_Y_POS = 20
 totalScore = 0
@@ -225,7 +225,7 @@ def reset_game():
 	#reset any global variables that may have been changed during game play
 	spaceShipRect = py.Rect(0,0,20,20)
 	targetHVel = 1
-	targetVVel = 10
+	targetVVel = 15
 	totalScore = 0
 	while len(targetList)>0:
 		del targetList[0]
@@ -314,118 +314,143 @@ def update_bullets():
 			i += 1
 
 def update_targets():
-	global targetList
-	global screenRect
-	global spaceShipRect
-	global totalScore
-	global targetDirection
+    global targetList
+    global screenRect
+    global spaceShipRect
+    global totalScore
+    global targetDirection
 
-	if len(targetList) == 0:
+    if len(targetList) == 0:
 		#all targets have been shot down, player wins
-		return PLAYER_WON
+        return PLAYER_WON
 
-	move_down = 0
-	leftMostTarget = targetList[0]
-	rightMostTarget = targetList[len(targetList)-1]
+    move_down = 0
+    leftMostTarget = targetList[0]
+    rightMostTarget = targetList[len(targetList)-1]
 
 	#test if targets are hitting screen boundaries
-	if (leftMostTarget.left <= windowRect.left) or (rightMostTarget.right >= windowRect.right):
+    if (leftMostTarget.left <= windowRect.left) or (rightMostTarget.right >= windowRect.right):
 		#move all targets downward and then reverse horizontal direction
-		move_down = 1
-		targetDirection *= -1
-	else:
-		move_down = 0
+        move_down = 1
+        targetDirection *= -1
+    else:
+        move_down = 0
+    py.time.delay(5)
 	
 	#adjust positions of all targets
-	t = 0
-	for t in range(len(targetList)):
-		targetList[t].x += (targetHVel * targetDirection)
-		targetList[t].y += (targetVVel * move_down)
+    t = 0
+    for t in range(len(targetList)):
+        targetList[t].x += (targetHVel * targetDirection)
+        targetList[t].y += (targetVVel * move_down)
 		#if the target collides with space ship, player loses
-		if spaceShipRect.colliderect(targetList[t]):
-			totalScore = 0
-			return PLAYER_LOST
+        if spaceShipRect.colliderect(targetList[t]):
+            totalScore = 0
+            return PLAYER_LOST
 		#if the target has reached bottom of screen, player loses
-		if targetList[t].bottom >= windowRect.bottom:
-			totalScore = 0
-			return PLAYER_LOST
-		t += 1
+        if targetList[t].bottom >= windowRect.bottom:
+            totalScore = 0
+            return PLAYER_LOST
+        t += 1
 
-	return GAME_CONTINUES	
+    return GAME_CONTINUES	
 
 def update_screen(spaceShipImage, targetImage):
-	global screen
-
+    global screen
+    global bg
+    global level1BackRect
 	#
 	#do we need to insert code to clear the entire screen first so all images can be redrawn at new positions?
 	#
-
+    bg = py.image.load('GameImages\planetwithcraters.jpg')
+    window.blit(bg, (0,0))
+    level1BackRect = display_subtitle("Quit", 660)
 	#draw space ship at its new position
-	window.blit(spaceShipImage, spaceShipRect)
-
+    window.blit(spaceShipImage, spaceShipRect)
+    py.display.flip()
 	#draw targets in their new positions
-	for target_rect in targetList:
-		window.blit(targetImage, target_rect)
+    for target_rect in targetList:
+        window.blit(targetImage, target_rect)
+        py.display.flip()
 
 	#draw all the in-flight bullets at their new positions
-	for bullet_rect in bulletList:
-		py.draw.rect(window, bulletColor, bullet_rect)
+    for bullet_rect in bulletList:
+        py.draw.rect(window, bulletColor, bullet_rect)
+        py.display.flip()
 
 	#refresh the screen
-	py.display.flip()
+    py.display.flip()
         
 def display_Level1():
     global level1BackRect
     #window.fill(bkgColor)
     # display_TITLE("Level 1", 30)
+    bg = py.image.load('GameImages\planetwithcraters.jpg')
+    window.blit(bg, (0,0))
+
+    py.time.delay(100)
     level1BackRect = display_subtitle("Quit", 660)
-    level1_Game(1)
+    playGame(1)
     #Call score function here
     return DISPLAY_LEVEL1
 
-def level1_Game(gameLevel):
-	global screen
-	global screenRect
-	global targetList
-	global bulletList
-	global targetHVel
-	global targetVVel
-	global totalScore
-	global spaceShipRect
+# def shipMove1():
+#     global spaceShipImage
+#     global spaceShipRect
+#     global hOffset
+#     hOffset = 100
+#     spaceShipImage = py.image.load('GameImages\mainshipResized.png')
+#     spaceShipRect = spaceShipImage.get_rect()
+#     spaceShipRect.midbottom = windowRect.midbottom
+#     spaceShipRect.bottom = windowRect.bottom - hOffset
+#     py.display.flip()
+#     window.blit(spaceShipImage, spaceShipRect)
+#     py.display.flip()
+
+def playGame(gameLevel):
+    global screen
+    global screenRect
+    global targetList
+    global bulletList
+    global targetHVel
+    global targetVVel
+    global totalScore
+    global spaceShipRect
 
 	#draw a space ship at its starting position
-	hOffset = 100 #how many pixels that bottom of space ship needs to be above bottom of screen
-	if gameLevel == 1:
-		spaceShipImage = py.image.load('GameImages\mainshipResized.png')
-	else:
-		spaceShipImage = py.image.load('GameImages\mainship2Resized.png')
-	spaceShipRect = spaceShipImage.get_rect()
-	spaceShipRect.midbottom = windowRect.midbottom
-	spaceShipRect.bottom = windowRect.bottom - hOffset
-	window.blit(spaceShipImage, spaceShipRect)
+    hOffset = 100 #how many pixels that bottom of space ship needs to be above bottom of screen
+    if gameLevel == 1:
+        spaceShipImage = py.image.load('GameImages\mainshipResized.png')
+    else:
+        spaceShipImage = py.image.load('GameImages\mainship2Resized.png')
+    spaceShipRect = spaceShipImage.get_rect()
+    spaceShipRect.midbottom = windowRect.midbottom
+    spaceShipRect.bottom = windowRect.bottom - hOffset
+    window.blit(spaceShipImage, spaceShipRect)
 
 	#adjust horizontal and vertical target movement speeds based on gameLevel
-	targetHVel *= gameLevel
-	targetVVel *= gameLevel
+    targetHVel *= gameLevel
+    targetVVel *= gameLevel
 
 	#draw a row of targets at top of screen, evenly spaced horizontally
-	if gameLevel == 1:
-		targetImage = py.image.load('GameImages\enemy ship 1Resized.png')
-	else:
-		targetImage = py.image.load('GameImages\enemy ship 2Resized.png')
-	targetRect = targetImage.get_rect()
-	target_width = targetRect.width
-	available_space_x = width - (2*target_width)
-	number_targets_x = available_space_x // (2*target_width)
-	for t in range(number_targets_x):
-		newTargetRect = targetRect.copy()
-		newTargetRect.x = target_width + 2*target_width*t
-		newTargetRect.y = TARGET_Y_POS
-		targetList.append(newTargetRect)
-		window.blit(targetImage, newTargetRect)
+    if gameLevel == 1:
+        targetImage = py.image.load('GameImages\enemy ship 1Resized.png')
+    else:
+        targetImage = py.image.load('GameImages\enemy ship 2Resized.png')
+    targetRect = targetImage.get_rect()
+    target_width = targetRect.width
+    available_space_x = width - (2*target_width)
+    number_targets_x = available_space_x // (2*target_width)
+    for t in range(number_targets_x):
+        newTargetRect = targetRect.copy()
+        newTargetRect.x = target_width + 2*target_width*t
+        newTargetRect.y = TARGET_Y_POS
+        targetList.append(newTargetRect)
+        window.blit(targetImage, newTargetRect)
+        py.display.flip()
+
 
 	#refresh the screen
-	py.display.flip()
+    py.display.flip()
 
 
 	#
@@ -433,34 +458,46 @@ def level1_Game(gameLevel):
 	#
 
 	#main game loop in which targets move continuously, ship moves and fires based on key presses
-	continueGame = True
-	totalScore = 0
-
-	while continueGame:
+    continueGame = True
+    totalScore = 0
+    clock = py.time.Clock()
+    while continueGame:
+        clock.tick(27)
 		#check for keyboard input
-		for event in py.event.get():
-			if event.type == py.QUIT:
-				py.display.quit()
-			elif event.type == py.KEYDOWN:
-				if event.key == py.K_RIGHT:
-					spaceShipRect.x += spaceShipVel
-				elif event.key == py.K_LEFT:
-					spaceShipRect.x -= spaceShipVel
-				elif event.key == py.K_SPACE: 
-					fire_bullet()
+        for event in py.event.get():
+            if event.type == py.QUIT:
+                py.display.quit()
+            keyPressed = py.key.get_pressed()
+            #if event.type == py.KEYDOWN:
+            if keyPressed[py.K_RIGHT]:
+                spaceShipRect.x += spaceShipVel
+                #shipMove1()
+                update_screen(spaceShipImage, targetImage)
+            elif keyPressed[py.K_LEFT]:
+                spaceShipRect.x -= spaceShipVel
+                #shipMove1()
+                update_screen(spaceShipImage, targetImage)
+            elif keyPressed[py.K_SPACE]: 
+                #shipMove1()
+                fire_bullet()
+                update_screen(spaceShipImage, targetImage)
+            else:
+                continue
+
 
 		#move up positions of all bullets in flight, check for target hits, update score
-		update_bullets()
+        update_bullets()
 
 		#update positions of all remaining targets and check for win-lose scenarios
-		outcome = update_targets()
+        outcome = update_targets()
 
 		#draw all images on screen and refresh screen
-		update_screen(spaceShipImage, targetImage)
+        update_screen(spaceShipImage, targetImage)
 
-		if outcome == PLAYER_WON or outcome == PLAYER_LOST:
-			continueGame = False
-			return outcome
+        if outcome == PLAYER_WON or outcome == PLAYER_LOST:
+            continueGame = False
+            return outcome
+    py.display.flip()
 #end of function play_game()
 
     #end of function play_game()
@@ -626,6 +663,7 @@ def backButtonToMenu():
     global currentDisplay
     if mouse_pos[0] >= 320 and mouse_pos[0] <= 380 and mouse_pos[1] >= 660 and mouse_pos[1] <= 680: 
         currentDisplay = display_Menu()
+        currentDisplay == DISPLAY_MAIN_MENU
         #800x800: 
 
 def backButtonToSettings():
@@ -737,6 +775,6 @@ while run:
                 else:
                     continue
 
-py.display.quit
+py.display.quit()
 #Hw 11/2/21: Add game into level 1
             
