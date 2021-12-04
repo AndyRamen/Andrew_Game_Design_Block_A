@@ -27,8 +27,8 @@ DISPLAY_SETTINGS_SCNSIZE = 7
 DISPLAY_LEVEL2 = 8
 DISPLAY_SCOREBOARD = 9
 currentDisplay = DISPLAY_MAIN_MENU
-width = 700
-height = 700
+# width = 700
+# height = 700
 # Define a list of Rects to store the main menu selection boxes
 tempRect = py.Rect(0,0,5,5)
 mainMenuRectList = [tempRect]
@@ -48,7 +48,36 @@ scoreboardBackRect = py.Rect(35,35,5,5)
 soundBackRect = py.Rect(40,40,5,5)
 screenSizeBackRect = py.Rect(45,45,5,5)
 
+#define global variables
+width =  700
+height = 700
 window = py.display.set_mode((width,height))
+windowRect = window.get_rect()
+tempRect = py.Rect(0,0,10,10)
+targetList = [tempRect]
+targetList.pop()
+bulletList = [tempRect]
+bulletList.pop()
+bulletVel = 1
+bulletWidth = 2
+bulletHeight = 5
+bulletColor = (255,0,0)
+spaceShipRect = py.Rect(0,0,20,20)
+spaceShipVel = 1
+
+#define defauly horizontal and vertical target movement speeds
+targetHVel = 1
+targetVVel = 10
+targetDirection = 1 #1 to move right and -1 to move left
+TARGET_Y_POS = 20
+totalScore = 0
+ptsPerTarget = 100
+
+#Define some constants to tell computer whether to stop the game or continue
+GAME_CONTINUES = 0
+PLAYER_WON = 1
+PLAYER_LOST = 2
+
 py.display.set_caption("Menu Window")
 
 # TITLE_FONT = py.font.SysFont(name, size, bold=False, italic=False )
@@ -58,6 +87,8 @@ TEXT_FONT = py.font.SysFont('Heveltica', 25)
 wbox = 25
 hbox = 25
 square = py.Rect(10,10, wbox, hbox)
+
+
 
 def display_TITLE(message, y):
     py.time.delay(100)
@@ -176,85 +207,332 @@ def display_Instructions():
     py.display.update()
     return DISPLAY_INSTRUCTIONS
 
+def reset_game():
+	global screen
+	global screenRect
+	global targetList
+	global bulletList
+	global spaceShipRect
+	global targetHVel
+	global targetVVel
+	global totalScore
+	
+	#
+	#insert code to redraw the entire screen
+	window = py.display.set_mode(width, height)
+	windowRect = window.get_rect()
+
+	#reset any global variables that may have been changed during game play
+	spaceShipRect = py.Rect(0,0,20,20)
+	targetHVel = 1
+	targetVVel = 10
+	totalScore = 0
+	while len(targetList)>0:
+		del targetList[0]
+	while len(bulletList)>0:
+		del bulletList[0]
+
+def fire_bullet():
+	global bulletList
+	global spaceShipRect
+
+	#create a new bullet rect right above the space ship
+	newBulletRect = py.Rect(0, 0, bulletWidth, bulletHeight)
+	newBulletRect.midbottom = spaceShipRect.midtop
+	#add new bullet to the list of existing bullets
+	bulletList.append(newBulletRect)
+
+def update_bullets():
+	global bulletList
+	global targetList
+	global totalScore
+
+	if len(bulletList) == 0:
+		return
+
+	#make a copy of bulletList to loop through, so the real bulletList can be updated within loop
+	tempRect = py.Rect(0,0,10,10)
+	bulletListCopy = [tempRect]
+	del bulletListCopy[0]
+	i = 0 #index
+	for i in range(len(bulletList)):
+		bulletCopy = bulletList[i].copy()
+		bulletListCopy.append(bulletCopy)
+		i += 1
+
+	#make a copy of targetList to loop through, so the real targetList may be updated within loop
+	tempRect = py.Rect(0,0,10,10)
+	targetListCopy = [tempRect]
+	del targetListCopy[0]
+	i = 0 #index
+	for i in range(len(targetList)):
+		targetCopy = targetList[i].copy()
+		targetListCopy.append(targetCopy)
+		i += 1
+
+	#advance the positions of all bullets in flight
+	i = 0 #index
+	for bullet in bulletListCopy:
+		#safty check
+		if i >= len(bulletList):
+			print("Error: bulletList length=", len(bulletList), "; i=", i)
+			break
+
+		#make sure the two lists are still lined up
+		if bullet.y == bulletList[i].y:
+			bulletList[i].y = bullet.y - bulletVel
+		else:
+			print("Mismatch: bullet ", i, " y=", bulletList[i].y, "; copy y=", bullet.y) 
+
+		bulletRemoved = False
+		#check for bullets going past top of screen
+		if bulletList[i].bottom <= 0:
+			#remove bullet from the real list
+			del bulletList[i]
+			bulletRemoved = True
+		else:
+			#test for target hits
+			t = 0 #index
+			for target in targetListCopy:
+				#safty check
+				if t >= len(targetList):
+					print("Error: targetList length=", len(targetList), "; t=", t)
+					break
+			
+				if targetList[t].colliderect(bulletList[i]):
+					#remove the hit target and the bullet from the real lists
+					totalScore += ptsPerTarget
+					del targetList[t]
+					del bulletList[i]
+					bulletRemoved = True
+					break #each bullet can only hit one target
+			else:
+				t += 1
+		
+		#do not increment the index if a bullet has been removed from the real list, because the next item in the list has moved up one slot
+		if bulletRemoved == False:
+			i += 1
+
+def update_targets():
+	global targetList
+	global screenRect
+	global spaceShipRect
+	global totalScore
+	global targetDirection
+
+	if len(targetList) == 0:
+		#all targets have been shot down, player wins
+		return PLAYER_WON
+
+	move_down = 0
+	leftMostTarget = targetList[0]
+	rightMostTarget = targetList[len(targetList)-1]
+
+	#test if targets are hitting screen boundaries
+	if (leftMostTarget.left <= windowRect.left) or (rightMostTarget.right >= windowRect.right):
+		#move all targets downward and then reverse horizontal direction
+		move_down = 1
+		targetDirection *= -1
+	else:
+		move_down = 0
+	
+	#adjust positions of all targets
+	t = 0
+	for t in range(len(targetList)):
+		targetList[t].x += (targetHVel * targetDirection)
+		targetList[t].y += (targetVVel * move_down)
+		#if the target collides with space ship, player loses
+		if spaceShipRect.colliderect(targetList[t]):
+			totalScore = 0
+			return PLAYER_LOST
+		#if the target has reached bottom of screen, player loses
+		if targetList[t].bottom >= windowRect.bottom:
+			totalScore = 0
+			return PLAYER_LOST
+		t += 1
+
+	return GAME_CONTINUES	
+
+def update_screen(spaceShipImage, targetImage):
+	global screen
+
+	#
+	#do we need to insert code to clear the entire screen first so all images can be redrawn at new positions?
+	#
+
+	#draw space ship at its new position
+	window.blit(spaceShipImage, spaceShipRect)
+
+	#draw targets in their new positions
+	for target_rect in targetList:
+		window.blit(targetImage, target_rect)
+
+	#draw all the in-flight bullets at their new positions
+	for bullet_rect in bulletList:
+		py.draw.rect(window, bulletColor, bullet_rect)
+
+	#refresh the screen
+	py.display.flip()
+        
 def display_Level1():
     global level1BackRect
     #window.fill(bkgColor)
     # display_TITLE("Level 1", 30)
-    # level1BackRect = display_subtitle("Back", 560)
-    level1_Game()
+    level1BackRect = display_subtitle("Quit", 660)
+    level1_Game(1)
     #Call score function here
     return DISPLAY_LEVEL1
 
-def level1_Game():
-    bg1 = py.image.load('GameImages\planetwithcraters.jpg')
-    window.blit(bg1, (0,0))
-    targetCount = 12
-    spaceship = py.image.load('GameImages\mainshipResized.png')
-    window.blit(spaceship, (50, 600))
-    target1 = py.image.load('GameImages\enemy ship 2Resized.png')
-    target1Special = py.image.load('GameImages\enemy ship 2Resized.png')
-    target2 = py.image.load('GameImages\enemy ship 1Resized.png')
-    target3 = py.image.load('GameImages\enemy ship 3Resized.png')
-    target4 = py.image.load('GameImages\enemy ship 4Resized.png')
+def level1_Game(gameLevel):
+	global screen
+	global screenRect
+	global targetList
+	global bulletList
+	global targetHVel
+	global targetVVel
+	global totalScore
+	global spaceShipRect
 
-    window.blit(target1Special, (30,5))
-    window.blit(target2, (80,5))
-    window.blit(target3, (130,5))
-    window.blit(target4, (180,5))
-    window.blit(target1, (230,5))
-    window.blit(target2, (280,5))
-    window.blit(target3, (330,5))
-    window.blit(target4, (380,5))
-    window.blit(target1, (430,5))
-    window.blit(target2, (480,5))
-    window.blit(target3, (530,5))
-    window.blit(target4, (580,5))
-    window.blit(target1, (630,5))
-    hVelocity = 5
-    vVelocity = 5
-    targetRefreshFreq = 5
-	# loop through (number of targets - 1): #because first target is almost in the list
-	# 	create a target rect sized based on a predefined image appropriate for gameLevel
-	# 	position the target rect a set distance from the previous rect in targetList
-	# 	append the new target rect to targetList
-	# end loop
-    target1LeftMostRect = py.Rect(width - 670, height - 695, 50, 50)
-    target1RightMostRect = py.Rect(width - 70, height - 695, 50, 50)
-    spaceshipRect = py.Rect(width - 650, height - 100, 50, 50)
-    targetlist = [target1LeftMostRect]
-    bulletRectList = []
-    continuegame = True
-    loopcount = 0
-    hDirection = "right"
-    moveDown = False
-    totalScore = 0
-    #screen.fill(myColor)
-    #py.display.set_caption("Space Invaders Level 1")
-    level1BackRect = display_subtitle("Quit", 660)
-    py.display.flip()
-    while continuegame:
-        if len(targetlist) == 0:
-            ScoreFile = open('SpaceInvadersScore.txt', 'a')
-            ScoreFile.write("\n The Score: \t" + str(totalScore))
-        loopcount += 1
-        if loopcount == targetRefreshFreq:
-            advanceTargets = True
-            loopcount = 0
-        else:
-            advanceTargets = False
-	    #clear the display window so everything can be redrawn
+	#draw a space ship at its starting position
+	hOffset = 100 #how many pixels that bottom of space ship needs to be above bottom of screen
+	if gameLevel == 1:
+		spaceShipImage = py.image.load('GameImages\mainshipResized.png')
+	else:
+		spaceShipImage = py.image.load('GameImages\mainship2Resized.png')
+	spaceShipRect = spaceShipImage.get_rect()
+	spaceShipRect.midbottom = windowRect.midbottom
+	spaceShipRect.bottom = windowRect.bottom - hOffset
+	window.blit(spaceShipImage, spaceShipRect)
 
-        # if hDirection == "right": 
-        #     if target1RightMostRect + 5 > width:
-		# 		#move down and start moving left
-        #         hDirection = "left"
-        #         moveDown = True
-        #     else: 
-        #         moveDown = False
+	#adjust horizontal and vertical target movement speeds based on gameLevel
+	targetHVel *= gameLevel
+	targetVVel *= gameLevel
+
+	#draw a row of targets at top of screen, evenly spaced horizontally
+	if gameLevel == 1:
+		targetImage = py.image.load('GameImages\enemy ship 1Resized.png')
+	else:
+		targetImage = py.image.load('GameImages\enemy ship 2Resized.png')
+	targetRect = targetImage.get_rect()
+	target_width = targetRect.width
+	available_space_x = width - (2*target_width)
+	number_targets_x = available_space_x // (2*target_width)
+	for t in range(number_targets_x):
+		newTargetRect = targetRect.copy()
+		newTargetRect.x = target_width + 2*target_width*t
+		newTargetRect.y = TARGET_Y_POS
+		targetList.append(newTargetRect)
+		window.blit(targetImage, newTargetRect)
+
+	#refresh the screen
+	py.display.flip()
 
 
+	#
+	#insert code to delay for one or two seconds before starting the game
+	#
 
-    #Add logic/game code here
+	#main game loop in which targets move continuously, ship moves and fires based on key presses
+	continueGame = True
+	totalScore = 0
+
+	while continueGame:
+		#check for keyboard input
+		for event in py.event.get():
+			if event.type == py.QUIT:
+				py.display.quit()
+			elif event.type == py.KEYDOWN:
+				if event.key == py.K_RIGHT:
+					spaceShipRect.x += spaceShipVel
+				elif event.key == py.K_LEFT:
+					spaceShipRect.x -= spaceShipVel
+				elif event.key == py.K_SPACE: 
+					fire_bullet()
+
+		#move up positions of all bullets in flight, check for target hits, update score
+		update_bullets()
+
+		#update positions of all remaining targets and check for win-lose scenarios
+		outcome = update_targets()
+
+		#draw all images on screen and refresh screen
+		update_screen(spaceShipImage, targetImage)
+
+		if outcome == PLAYER_WON or outcome == PLAYER_LOST:
+			continueGame = False
+			return outcome
+#end of function play_game()
+
+    #end of function play_game()
+        # bg1 = py.image.load('GameImages\planetwithcraters.jpg')
+        # window.blit(bg1, (0,0))
+        # targetCount = 12
+        # spaceship = py.image.load('GameImages\mainshipResized.png')
+        # window.blit(spaceship, (50, 600))
+        # target1 = py.image.load('GameImages\enemy ship 2Resized.png')
+        # target1Special = py.image.load('GameImages\enemy ship 2Resized.png')
+        # target2 = py.image.load('GameImages\enemy ship 1Resized.png')
+        # target3 = py.image.load('GameImages\enemy ship 3Resized.png')
+        # target4 = py.image.load('GameImages\enemy ship 4Resized.png')
+
+        # window.blit(target1Special, (30,5))
+        # window.blit(target2, (80,5))
+        # window.blit(target3, (130,5))
+        # window.blit(target4, (180,5))
+        # window.blit(target1, (230,5))
+        # window.blit(target2, (280,5))
+        # window.blit(target3, (330,5))
+        # window.blit(target4, (380,5))
+        # window.blit(target1, (430,5))
+        # window.blit(target2, (480,5))
+        # window.blit(target3, (530,5))
+        # window.blit(target4, (580,5))
+        # window.blit(target1, (630,5))
+        # hVelocity = 5
+        # vVelocity = 5
+        # targetRefreshFreq = 5
+        # # loop through (number of targets - 1): #because first target is almost in the list
+        # # 	create a target rect sized based on a predefined image appropriate for gameLevel
+        # # 	position the target rect a set distance from the previous rect in targetList
+        # # 	append the new target rect to targetList
+        # # end loop
+        # target1LeftMostRect = py.Rect(width - 670, height - 695, 50, 50)
+        # target1RightMostRect = py.Rect(width - 70, height - 695, 50, 50)
+        # spaceshipRect = py.Rect(width - 650, height - 100, 50, 50)
+        # targetlist = [target1LeftMostRect]
+        # bulletRectList = []
+        # continuegame = True
+        # loopcount = 0
+        # hDirection = "right"
+        # moveDown = False
+        # totalScore = 0
+        # #screen.fill(myColor)
+        # #py.display.set_caption("Space Invaders Level 1")
+        # level1BackRect = display_subtitle("Quit", 660)
+        # py.display.flip()
+        # while continuegame:
+        #     if len(targetlist) == 0:
+        #         ScoreFile = open('SpaceInvadersScore.txt', 'a')
+        #         ScoreFile.write("\n The Score: \t" + str(totalScore))
+        #     loopcount += 1
+        #     if loopcount == targetRefreshFreq:
+        #         advanceTargets = True
+        #         loopcount = 0
+        #     else:
+        #         advanceTargets = False
+            #clear the display window so everything can be redrawn
+
+            # if hDirection == "right": 
+            #     if target1RightMostRect + 5 > width:
+            # 		#move down and start moving left
+            #         hDirection = "left"
+            #         moveDown = True
+            #     else: 
+            #         moveDown = False
+
+
+
+        #Add logic/game code here
 
 def display_Level2():
     global level2BackRect
