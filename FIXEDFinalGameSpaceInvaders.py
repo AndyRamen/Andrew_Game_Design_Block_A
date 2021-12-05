@@ -58,16 +58,16 @@ targetList = [tempRect]
 targetList.pop()
 bulletList = [tempRect]
 bulletList.pop()
-bulletVel = 1
-bulletWidth = 2
-bulletHeight = 5
+bulletVel = 30
+bulletWidth = 5
+bulletHeight = 15
 bulletColor = (255,0,0)
 spaceShipRect = py.Rect(0,0,20,20)
 spaceShipVel = 15
 
 #define defauly horizontal and vertical target movement speeds
-targetHVel = 1
-targetVVel = 15
+targetHVel = 5
+targetVVel = 20
 targetDirection = 1 #1 to move right and -1 to move left
 TARGET_Y_POS = 20
 totalScore = 0
@@ -354,17 +354,14 @@ def update_targets():
 
     return GAME_CONTINUES	
 
-def update_screen(spaceShipImage, targetImage):
+def update_screen(spaceShipImage, targetImage, bg, caption):
     global screen
-    global bg
     global level1BackRect
-	#
-	#do we need to insert code to clear the entire screen first so all images can be redrawn at new positions?
-	#
-    bg = py.image.load('GameImages\planetwithcraters.jpg')
+
     window.blit(bg, (0,0))
     level1BackRect = display_subtitle("Quit", 660)
-	#draw space ship at its new position
+    py.display.set_caption(caption)
+    #draw space ship at its new position
     window.blit(spaceShipImage, spaceShipRect)
     py.display.flip()
 	#draw targets in their new positions
@@ -380,19 +377,6 @@ def update_screen(spaceShipImage, targetImage):
 	#refresh the screen
     py.display.flip()
         
-def display_Level1():
-    global level1BackRect
-    #window.fill(bkgColor)
-    # display_TITLE("Level 1", 30)
-    bg = py.image.load('GameImages\planetwithcraters.jpg')
-    window.blit(bg, (0,0))
-
-    py.time.delay(100)
-    level1BackRect = display_subtitle("Quit", 660)
-    playGame(1)
-    #Call score function here
-    return DISPLAY_LEVEL1
-
 # def shipMove1():
 #     global spaceShipImage
 #     global spaceShipRect
@@ -420,8 +404,13 @@ def playGame(gameLevel):
     hOffset = 100 #how many pixels that bottom of space ship needs to be above bottom of screen
     if gameLevel == 1:
         spaceShipImage = py.image.load('GameImages\mainshipResized.png')
+        bg = py.image.load('GameImages\planetwithcraters.jpg')
+        caption = ("Space Invaders Level 1")
     else:
         spaceShipImage = py.image.load('GameImages\mainship2Resized.png')
+        bg = py.image.load('GameImages\\nubula.jpg')
+        caption = ("Space Invaders Level 2")
+
     spaceShipRect = spaceShipImage.get_rect()
     spaceShipRect.midbottom = windowRect.midbottom
     spaceShipRect.bottom = windowRect.bottom - hOffset
@@ -472,17 +461,20 @@ def playGame(gameLevel):
             if keyPressed[py.K_RIGHT]:
                 spaceShipRect.x += spaceShipVel
                 #shipMove1()
-                update_screen(spaceShipImage, targetImage)
             elif keyPressed[py.K_LEFT]:
                 spaceShipRect.x -= spaceShipVel
                 #shipMove1()
-                update_screen(spaceShipImage, targetImage)
             elif keyPressed[py.K_SPACE]: 
                 #shipMove1()
                 fire_bullet()
-                update_screen(spaceShipImage, targetImage)
-            else:
-                continue
+            elif eve.type == py.MOUSEBUTTONDOWN:
+                mouse_pressed = py.mouse.get_pressed()
+                if mouse_pressed[0]: #Left mouse button clicked
+                    mouse_pos = py.mouse.get_pos()
+                    print(mouse_pos)
+                    backButtonToMenu()
+
+
 
 
 		#move up positions of all bullets in flight, check for target hits, update score
@@ -492,12 +484,12 @@ def playGame(gameLevel):
         outcome = update_targets()
 
 		#draw all images on screen and refresh screen
-        update_screen(spaceShipImage, targetImage)
+        update_screen(spaceShipImage, targetImage, bg, caption)
 
         if outcome == PLAYER_WON or outcome == PLAYER_LOST:
             continueGame = False
             return outcome
-    py.display.flip()
+    #py.display.flip()
 #end of function play_game()
 
     #end of function play_game()
@@ -544,7 +536,7 @@ def playGame(gameLevel):
         # moveDown = False
         # totalScore = 0
         # #screen.fill(myColor)
-        # #py.display.set_caption("Space Invaders Level 1")
+        # #_caption("Space Invaders Levpy.display.setel 1")
         # level1BackRect = display_subtitle("Quit", 660)
         # py.display.flip()
         # while continuegame:
@@ -571,21 +563,8 @@ def playGame(gameLevel):
 
         #Add logic/game code here
 
-def display_Level2():
-    global level2BackRect
-    # window.fill(bkgColor)
-    # display_TITLE("Level 2", 30)
-    # level2BackRect = display_subtitle("Back", 560)
-    # py.display.update()
-    level2_Game()
-    return DISPLAY_LEVEL2
 
-def level2_Game():
-    bg2 = py.image.load('GameImages\\nubula.jpg')
-    window.blit(bg2, (0,0))
-    py.display.set_caption("Space Invaders Level 2")
-    level2BackRect = display_subtitle("Quit", 660)
-    py.display.flip()
+
 
 def display_Scoreboard():
     global scoreboardBackRect
@@ -642,11 +621,14 @@ def MainMenuWin():
         print("Main Menu: Clicked on Instructions")
     #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 170 and mouse_pos[1] <=195: #Clicked on level 1
     elif mainMenuRectList[1].collidepoint(mouse_pos[0], mouse_pos[1]):   
-        currentDisplay = display_Level1()
-        #print("Main Menu: Clicked on Level 1")
+        currentDisplay = DISPLAY_LEVEL1
+        print("Main Menu: Clicked on Level 1")
+        playGame(1)
+
     elif mainMenuRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):   
-        currentDisplay = display_Level2()
-        #print("Main Menu: Clicked on Level 2")
+        currentDisplay = DISPLAY_LEVEL2
+        print("Main Menu: Clicked on Level 2")
+        playGame(2)
     elif mainMenuRectList[3].collidepoint(mouse_pos[0], mouse_pos[1]):   
         currentDisplay = display_Scoreboard()
         #print("Main Menu: Clicked on Scoreboard")
