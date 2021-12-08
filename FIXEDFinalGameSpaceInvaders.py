@@ -202,6 +202,7 @@ def display_Instructions():
     instructionBackRect = display_subtitle("Back", 660)
     display_text("Aliens are invading our planet!", 80)
     display_text("Protect the planet until everyone has fully evacuted. Good luck.", 110)
+    display_text("Note: You can only fire a certain amount of bullets before reloading! Don't get cocky.", 140)
     display_subtitle("--Controls--", 180)
     display_text("Left arrow key: Move left", 210)
     display_text("Right arrow key: Move right", 230)
@@ -316,7 +317,7 @@ def update_bullets():
         if bulletRemoved == False:
             i += 1
         else:
-            bulletRemove = False
+            bulletRemoved = False
 
 def update_targets():
     global targetList
@@ -496,6 +497,17 @@ def display_Scoreboard():
     global scoreboardBackRect
     window.fill(bkgColor)
     display_TITLE("Scoreboard", 30)
+    openFile = open('SpaceInvadersScore.txt', 'r')
+    lines = openFile.readlines()
+    lineYValue = 100
+    for line in lines:
+        display_text(line, lineYValue)
+        lineYValue = lineYValue + 20
+        openFile
+        openFile.close
+    # openFile = open('SpaceInvadersScore.txt', 'r')
+    # display_text(openFile.read(), 100)
+    # openFile.close
     scoreboardBackRect = display_subtitle("Back", 660)
     py.display.update()
     return DISPLAY_SCOREBOARD
@@ -553,7 +565,7 @@ def MainMenuWin():
         outCome = playGame(1)
         if outCome == PLAYER_WON:
             #write player name, game level, totalScore to score file
-            scoreFile.write("\n Level 1 Score: \t" + str(totalScore))
+            scoreFile.write("\n Level 1 Score: " + str(totalScore))
             scoreFile.close()
             #then display main menu window
             print("Player has won level 1 with score ", totalScore)
@@ -561,7 +573,7 @@ def MainMenuWin():
             #write player name, game level, 0 score to score file
             #then display main menu window
             totalScore = 0
-            scoreFile.write("\n Level 1 Score: \t" + str(totalScore))
+            scoreFile.write("\n Level 1 Score: " + str(totalScore))
             scoreFile.close()
             print("Player has lost level 1. Total score: ", totalScore)
 
@@ -577,14 +589,15 @@ def MainMenuWin():
         if outCome == PLAYER_WON:
             #write player name, game level, totalScore to score file
             #then display main menu window
-            scoreFile.write("\n Level 2 Score: \t" + str(totalScore))
+            totalScore = totalScore * 2
+            scoreFile.write("\n Level 2 Score: " + str(totalScore))
             scoreFile.close()
             print("Player has won level 2 with score ", totalScore)
         elif outCome == PLAYER_LOST:
             #write player name, game level, 0 score to score file
             #then display main menu window
             totalScore = 0
-            scoreFile.write("\n Level 2 Score: \t" + str(totalScore))
+            scoreFile.write("\n Level 2 Score: " + str(totalScore))
             scoreFile.close()
             print("Player has lost level 2. Total score: ", totalScore)
         elif outCome == PLAYER_QUIT:

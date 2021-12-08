@@ -7,3 +7,6 @@ ANdrew	 Highest score:	74
 Aga	 Highest score:	45
 Andrew	 Highest score:	0
 Andrew	 Highest score:	90
+
+ The highest score: 	450
+ The highest score: 	450

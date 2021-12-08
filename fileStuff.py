@@ -8,10 +8,18 @@ import os, time
 #Always close a file when you are done using it.
 
 #Read and print the file
+print("How to read from a txt file.")
 fileMy= open('score.txt', 'r')
 print(fileMy.read())
 fileMy.close()
 score=450
-anotherFile= open('score.txt', 'a')
-anotherFile.write("\n The highest score: \t" + str(score))
-anotherFile.close()
+# anotherFile= open('score.txt', 'a')
+# anotherFile.write("\n The highest score: \t" + str(score))
+# anotherFile.close()
+#One way (below)
+# unga = open('score.txt', 'r')
+# lines = unga.readlines()
+# for line in lines:
+#     print(line)
+#     unga
+# unga.close()
