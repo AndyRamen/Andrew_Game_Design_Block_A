@@ -1,17 +1,20 @@
-#Andrew Cai 10/25/21
-#Learning fonts and blit
+#Andrew Cai 12/8/21
+#FINAL PROJECT
 
 from typing import Text
 import pygame as py, os, random, time
 
 py.init()
+
+#Below are lists of messages that functions will print onto the menu.
 menuMessages = ["Instructions", "Level 1", "Level 2", "Scoreboard", "Settings", "Exit"]
 messages = ["Background Color", "Screen Size"]
 screenSizeMessages = ["700x700", "800x800", "850x850"]
 backgroundColors = {'Green': (0,128,0), 'Orange': (255,165,0), 'Black': (0,0,0)}
 colors= {'red': (255,0,0), 'green':(0,255,0), 'blue':(0,0,255), 'purple':(150,0,150), 'black': (0,0,0)}
 bkgColorMessage = ["Green", "Orange", "Black"]
-#backMessage = ["wfoi", "Back"]
+
+#Define constants to use in code later.
 GREEN = (90,128,0)
 BLACK = (0,0,0)
 WHITE=(255,255,255)
@@ -82,7 +85,6 @@ PLAYER_QUIT = 3
 
 py.display.set_caption("Menu Window")
 
-# TITLE_FONT = py.font.SysFont(name, size, bold=False, italic=False )
 TITLE_FONT = py.font.SysFont('Heveltica', 50)
 SUBTITLE_FONT = py.font.SysFont('Heveltica', 40)
 TEXT_FONT = py.font.SysFont('Heveltica', 25)
@@ -91,15 +93,15 @@ hbox = 25
 square = py.Rect(10,10, wbox, hbox)
 
 
-
+#All display functions are gotten from the menu code. There is no file for that because I built my project inside that file.
 def display_TITLE(message, y):
     py.time.delay(100)
     text = TITLE_FONT.render(message, 1, WHITE )
     x = width/2-text.get_width()/2
-   # window.blit(text, (width/2-text.get_width()/2, height/2-text.get_height()/2))
     titleRect = window.blit(text, (x, y))
     py.display.update()
     return titleRect
+    #Determines what "display_TITLE" will look like. Now when I call this and put the message it'll print it onto the screen.
 
 def display_subtitle (message, y):
     py.time.delay(100)
@@ -108,6 +110,7 @@ def display_subtitle (message, y):
     subtitleRect = window.blit(text, (x,y))
     py.display.update()
     return subtitleRect
+    #Same thing as above but with a smaller size
 
 def display_text (message, y):
     py.time.delay(100)
@@ -116,6 +119,7 @@ def display_text (message, y):
     subtitleRect = window.blit(text, (x,y))
     py.display.update()
     return subtitleRect
+    #Same thing again but tiny so I can put sentences onto the window.
 
 
 def display_Menu():
@@ -140,6 +144,7 @@ def display_Menu():
     py.display.set_caption("Menu Window")
     py.display.update()
     return DISPLAY_MAIN_MENU
+    #This function prints everything you see on the main menu. It prints from the list menuMessages and gives each word a bullet point and a rect
 
 def Settings_Menu():
     x = 40
@@ -158,6 +163,7 @@ def Settings_Menu():
         py.time.delay(100)
         y += 80
         square.y = y
+    #This function prints everything in settings and gives each one a rect and a bullet point.
 
 def ScreenSize_Menu():
     x = 40
@@ -176,6 +182,7 @@ def ScreenSize_Menu():
         py.time.delay(100)
         y += 80
         square.y = y
+    #Determines what is printed when user clicks on Screen Size option. Gives each word a rect and a bullet point.
 
 def BKG_Color():
     x = 40
@@ -194,6 +201,7 @@ def BKG_Color():
         py.time.delay(100)
         y += 80
         square.y = y
+    #Determines what is printed when user clicks on the Background Color option. Gives each word a rect and a bullet point.
 
 def display_Instructions():
     global instructionBackRect
@@ -209,6 +217,7 @@ def display_Instructions():
     display_text("Spacebar: Shoot", 250)
     py.display.update()
     return DISPLAY_INSTRUCTIONS
+    #This will print when you click on instructions. I used display_text for most of these so they can fit on screen.
 
 def reset_game(totalScore):
     global screen
@@ -233,6 +242,7 @@ def reset_game(totalScore):
         del targetList[0]
     while len(bulletList)>0:
         del bulletList[0]
+    #Resets everything in the game back to a factory default of sorts. Clear the entire screen and resets the global variables that change in game.
 
 def fire_bullet(bulletLimit):
     global bulletList
@@ -244,6 +254,7 @@ def fire_bullet(bulletLimit):
         newBulletRect.midbottom = spaceShipRect.midtop
         #add new bullet to the list of existing bullets
         bulletList.append(newBulletRect)
+    #Fires bullet IF the length of the bullet list is less than the bulletLimit. Aligns bullet with ship.
 
 def update_bullets():
     global bulletList
@@ -277,7 +288,7 @@ def update_bullets():
     #advance the positions of all bullets in flight
     i = 0
     for bullet in bulletListCopy:
-        #safty check
+        #safety check
         if i >= len(bulletList):
             #print("Error: bulletList length=", len(bulletList), "; i=", i)
             break
@@ -318,7 +329,7 @@ def update_bullets():
             i += 1
         else:
             bulletRemoved = False
-
+    #This function creates a copy of the bullet rect list to loop through, checks for hits, and moves the positions of all bullets in flight (not in that order)
 def update_targets():
     global targetList
     global spaceShipRect
@@ -358,6 +369,7 @@ def update_targets():
         t += 1
 
     return GAME_CONTINUES	
+    #This moves all targets down and checks if they are hitting the screen boundaries or are all shot down. If either of these are true, it will return an outcome.
 
 
 def update_screen(spaceShipImage, targetImage, bg, caption):
@@ -374,16 +386,14 @@ def update_screen(spaceShipImage, targetImage, bg, caption):
 	#draw targets in their new positions
     for target_rect in targetList:
         window.blit(targetImage, target_rect)
-#        py.display.flip()
 
 	#draw all the in-flight bullets at their new positions
     for bullet_rect in bulletList:
         py.draw.rect(window, bulletColor, bullet_rect)
-#        py.display.flip()
 
 	#refresh the screen
     py.display.flip()
-
+    #This function basically just repaints everything on screen. One big refresh function.
 def update_ship(moveLeft, moveRight):
     global spaceShipRect
     global windowRect
@@ -393,6 +403,7 @@ def update_ship(moveLeft, moveRight):
         spaceShipRect.x -= spaceShipVel
     if moveRight and (spaceShipRect.right + spaceShipVel) <= windowRect.right:
         spaceShipRect.x += spaceShipVel
+    #If moveLeft or moveRight are true, then it'll move the ship. More on moveLeft or moveRight later.
 
 
 def playGame(gameLevel):
@@ -418,6 +429,7 @@ def playGame(gameLevel):
         bg = py.image.load('GameImages\\nubula.jpg')
         caption = ("Space Invaders Level 2")
         bulletLimit = 5
+    #These global variables differ per game level.
 
     #create space ship at starting position
     spaceShipRect = spaceShipImage.get_rect()
@@ -458,18 +470,20 @@ def playGame(gameLevel):
                     update_ship(False, True)
                 elif event.key == py.K_LEFT:
                     update_ship(True, False)
+                #If I press down the right key, it'll call the function and say moveRight is true and moveLeft is false.
+                #Opposite for left key. This just makes the code cleaner
                 elif event.key == py.K_SPACE: 
                     fire_bullet(bulletLimit)
             elif event.type == py.MOUSEBUTTONDOWN:
                 mouse_pressed = py.mouse.get_pressed()
                 if mouse_pressed[0]: #Left mouse button clicked
                     mouse_pos = py.mouse.get_pos()
-                    #quit game play and return to main program if mouse click is within Quit rect
                     if mouse_pos[0] >= 320 and mouse_pos[0] <= 380 and mouse_pos[1] >= 660 and mouse_pos[1] <= 680: 
                         reset_game(totalScore)
                         continueGame = False
                         MainMenuWin()
                         return PLAYER_QUIT
+                        #If you left click inside these boundaries you've clicked on the quit button.
 
 		#move up positions of all bullets in flight, check for target hits, update score
         update_bullets()
@@ -491,6 +505,7 @@ def playGame(gameLevel):
             print(totalScore)
             reset_game(totalScore)
             return outcome
+        #If you lose or win, it'll call the reset game function and return the outcome.
 
 
 def display_Scoreboard():
@@ -505,12 +520,10 @@ def display_Scoreboard():
         lineYValue = lineYValue + 20
         openFile
         openFile.close
-    # openFile = open('SpaceInvadersScore.txt', 'r')
-    # display_text(openFile.read(), 100)
-    # openFile.close
     scoreboardBackRect = display_subtitle("Back", 660)
     py.display.update()
     return DISPLAY_SCOREBOARD
+    #Prints from the SpaceInvadersScore.txt (score file) file.
 
 def display_Settings():
     global settingsBackRect
@@ -522,6 +535,7 @@ def display_Settings():
     py.display.set_caption("Settings Window")
     py.display.update()
     return DISPLAY_SETTINGS
+    #Prints everything in settings.
 
 def display_Background_Colors():
     window.fill(bkgColor)
@@ -530,13 +544,7 @@ def display_Background_Colors():
     BKG_Color()
     py.display.update()
     return DISPLAY_SETTINGS_BKGCOLOR
-
-# def display_Object_Colors():
-#     window.fill(bkgColor)
-#     display_TITLE("Object Color", 20)
-#     objectColorBackRect = display_subtitle("Back", 560)
-#     py.display.update()
-#     return DISPLAY_SETTINGS_OBJCOLOR
+    #Prints everything in background color.
 
 def display_Settings_ScrnSize():
     window.fill(bkgColor)
@@ -545,6 +553,7 @@ def display_Settings_ScrnSize():
     ScreenSize_Menu()
     py.display.update()
     return DISPLAY_SETTINGS_SCNSIZE
+    #Prints everything in screen size.
 
 def MainMenuWin():
     global currentDisplay
@@ -558,7 +567,6 @@ def MainMenuWin():
         currentDisplay = display_Instructions()    
         #print("After display_instructions: rect", instructionBackRect.topleft, instructionBackRect.topright, instructionBackRect.bottomleft, instructionBackRect.bottomright)
         print("Main Menu: Clicked on Instructions")
-    #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 170 and mouse_pos[1] <=195: #Clicked on level 1
     elif mainMenuRectList[1].collidepoint(mouse_pos[0], mouse_pos[1]):   
         currentDisplay = DISPLAY_LEVEL1
 #        print("Main Menu: Clicked on Level 1")
@@ -606,15 +614,13 @@ def MainMenuWin():
     elif mainMenuRectList[3].collidepoint(mouse_pos[0], mouse_pos[1]):   
         currentDisplay = display_Scoreboard()
         #print("Main Menu: Clicked on Scoreboard")
-    #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 250 and mouse_pos[1] <=275: #Clicked on settings
     elif mainMenuRectList[4].collidepoint(mouse_pos[0], mouse_pos[1]):
         currentDisplay = display_Settings()
         #print("Main Menu: Clicked on Settings")
-    #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 330 and mouse_pos[1] <= 355: #Clicked on exit
     elif mainMenuRectList[5].collidepoint(mouse_pos[0], mouse_pos[1]):
         #print("Main Menu: Clicked on Exit")
         run = False
-
+    #This function checks if you've left clicked on any of the rectangles, and will write the score of the game into the score file.
 
 def backButtonToMenu():
     global currentDisplay
@@ -623,16 +629,14 @@ def backButtonToMenu():
         currentDisplay = display_Menu()
         print(mouse_pos)
         currentDisplay == DISPLAY_MAIN_MENU
-        #800x800: 
+    #A small function for the back button.
 
 def backButtonToSettings():
     global currentDisplay
     if mouse_pos[0] >= 320 and mouse_pos[0] <= 380 and mouse_pos[1] >= 660 and mouse_pos[1] <= 680:
         currentDisplay = display_Settings()
+    #A small function for the back button.
 
-xc = random.randint(25, 100)
-yc = random.randint(25, 100)
-# rect = py.Rect(width/2, height/2, wbox, hbox)
 hbox=50 
 wbox=50
 
@@ -643,6 +647,7 @@ run = True
 bkgColor = BLACK
 currentDisplay = display_Menu()
 
+#Main run loop below. Changes constants and calls functions.
 while run:
     for eve in py.event.get():
         if eve.type == py.QUIT:
@@ -658,10 +663,6 @@ while run:
                     MainMenuWin()
                 elif currentDisplay == DISPLAY_INSTRUCTIONS:
                     backButtonToMenu()#Clicked on back on instructions
-                    #if instructionBackRect.collidepoint(mouse_pos[0], mouse_pos[1]):
-                        #print("Instructions: Clicked on Back")
- 
-                        #print("Level 1: Clicked on Back
                 elif currentDisplay == DISPLAY_LEVEL1:
                     backButtonToMenu()
                     #clicked on level 1 back
@@ -671,23 +672,17 @@ while run:
                 elif currentDisplay == DISPLAY_SCOREBOARD:
                     backButtonToMenu()#Clicked on back on level 1
                         #print("Scoreboard: Clicked on Back")
-
                 elif currentDisplay == DISPLAY_SETTINGS:
                     backButtonToMenu()#Clicked on back on settings
                         #print("Settings: Clicked on Back")
                     if settingsRectList[0].collidepoint(mouse_pos[0], mouse_pos[1]):
-                    #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 90 and mouse_pos[1] <= 115: #Clicked on bkg color
+                        #Clicked on bkg color
                         #print("Settings: Clicked on Background Color")
                         currentDisplay = display_Background_Colors()
                     elif settingsRectList[1].collidepoint(mouse_pos[0], mouse_pos[1]):
-                    #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 170 and mouse_pos[1] <= 195: #Clicked on object color
-                        #print("Settings: Clicked on Object Color")
+                        #Clicked on screen size
+                        #print("Settings: Clicked on Screen Size")
                         currentDisplay = display_Settings_ScrnSize()
-                    # elif settingsRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):
-                    #     currentDisplay = display_Settings_ScrnSize()
-                    # elif settingsRectList[3].collidepoint(mouse_pos[0], mouse_pos[1]):
-                    #     #print("Settings: Clicked on Screen Size")
-                    #     currentDisplay = display_Settings_ScrnSize()
                     else:
                         continue
                 elif currentDisplay == DISPLAY_SETTINGS_SCNSIZE:
@@ -707,23 +702,20 @@ while run:
                         window = py.display.set_mode((width, height))
                     else:
                         continue
-                # elif currentDisplay == DISPLAY_SETTINGS_OBJCOLOR:
-                #     backButtonToSettings() #Clicked back on object color
-                #         #print("Settings/Object Color: Clicked on Back")
                 elif currentDisplay == DISPLAY_SETTINGS_BKGCOLOR:
                     BKG_Color()
                     py.display.update
                     backButtonToSettings()
                     if backgroundColorsRectList[0].collidepoint(mouse_pos[0], mouse_pos[1]):
-                    #if mouse_pos[0] >= 40 and mouse_pos[0] <= 90 and mouse_pos[1] >= 90 and mouse_pos[1] <= 115: #Changes color to green
+                        #Changes color to green
                         bkgColor = GREEN
                         currentDisplay = display_Background_Colors()
                     elif backgroundColorsRectList[1].collidepoint(mouse_pos[0], mouse_pos[1]):
-                    #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 170 and mouse_pos[1] <= 195: #Changes color to orange
+                        #Changes color to orange
                         bkgColor = ORANGE
                         currentDisplay = display_Background_Colors()
                     elif backgroundColorsRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):
-                    #elif mouse_pos[0] >= 40 and mouse_pos[0] <= 65 and mouse_pos[1] >= 250 and mouse_pos[1] <= 275: #Changes color to black
+                        #Changes color to black
                         bkgColor = BLACK
                         currentDisplay = display_Background_Colors()
                     #Clicked on back on bkg color
@@ -734,5 +726,5 @@ while run:
                     continue
 
 py.quit()
-#Hw 11/2/21: Add game into level 1
-            
+
+#Andrew Cai 12/8/21
