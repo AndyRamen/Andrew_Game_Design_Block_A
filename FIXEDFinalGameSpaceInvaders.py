@@ -64,7 +64,8 @@ bulletHeight = 15
 bulletColor = (255,0,0)
 spaceShipRect = py.Rect(0,0,20,20)
 spaceShipVel = 15
-
+bulletRemoved = False
+scoreFile = open('SpaceInvadersScore.txt', 'a')
 #define defauly horizontal and vertical target movement speeds
 targetHVel = 5
 targetVVel = 20
@@ -208,28 +209,29 @@ def display_Instructions():
     py.display.update()
     return DISPLAY_INSTRUCTIONS
 
-def reset_game():
-	global screen
-	global targetList
-	global bulletList
-	global spaceShipRect
-	global targetHVel
-	global targetVVel
-	global totalScore
+def reset_game(totalScore):
+    global screen
+    global targetList
+    global bulletList
+    global spaceShipRect
+    global targetHVel
+    global targetVVel
+    global ptsPerTarget
 	
 	#clear the entire screen
-	window = py.display.set_mode((width, height))
-	windowRect = window.get_rect()
+    window = py.display.set_mode((width, height))
+    windowRect = window.get_rect()
 
-	#reset any global variables that may have been changed during game play
-	spaceShipRect = py.Rect(0,0,20,20)
-	targetHVel = 1
-	targetVVel = 15
-	totalScore = 0
-	while len(targetList)>0:
-		del targetList[0]
-	while len(bulletList)>0:
-		del bulletList[0]
+    #reset any global variables that may have been changed during game play
+    spaceShipRect = py.Rect(0,0,20,20)
+    targetHVel = 1
+    targetVVel = 15
+    if PLAYER_LOST:
+        totalScore = 0
+    while len(targetList)>0:
+        del targetList[0]
+    while len(bulletList)>0:
+        del bulletList[0]
 
 def fire_bullet(bulletLimit):
     global bulletList
@@ -246,6 +248,7 @@ def update_bullets():
     global bulletList
     global targetList
     global totalScore
+    global bulletRemoved
 
     if len(bulletList) == 0:
         return
@@ -260,7 +263,7 @@ def update_bullets():
         bulletListCopy.append(bulletCopy)
         i += 1
 
-	#make a copy of targetList to loop through so the real targetList may be updated within loop
+    #make a copy of targetList to loop through so the real targetList may be updated within loop
     tempRect = py.Rect(0,0,10,10)
     targetListCopy = [tempRect]
     del targetListCopy[0]
@@ -275,15 +278,15 @@ def update_bullets():
     for bullet in bulletListCopy:
         #safty check
         if i >= len(bulletList):
-            print("Error: bulletList length=", len(bulletList), "; i=", i)
+            #print("Error: bulletList length=", len(bulletList), "; i=", i)
             break
 
         #make sure the two lists are still lined up
         if bullet.y == bulletList[i].y:
             bulletList[i].y = bullet.y - bulletVel
         else:
-            print("Error: bullet ", i, " y=", bulletList[i].y, "; copy y=", bullet.y)
-        bulletRemoved = False
+            #print("Error: bullet ", i, " y=", bulletList[i].y, "; copy y=", bullet.y)
+            bulletRemoved = False
         #check for bullets going past top of screen
         if bulletList[i].bottom <= 0:
             #remove bullet from the real list
@@ -295,7 +298,7 @@ def update_bullets():
             for target in targetListCopy:
                 if t >= len(targetList):
                     #safety check
-                    print("Error: targetList length=", len(targetList), "; t=", t)
+                    #print("Error: targetList length=", len(targetList), "; t=", t)
                     break
                 elif targetList[t].colliderect(bulletList[i]):
                     #remove the hit target and the bullet from the real lists then break out of loop,
@@ -304,6 +307,7 @@ def update_bullets():
                     del targetList[t]
                     del bulletList[i]
                     bulletRemoved = True
+                    totalScore = totalScore + ptsPerTarget
                     break
                 else:
                     t += 1 
@@ -354,6 +358,7 @@ def update_targets():
 
     return GAME_CONTINUES	
 
+
 def update_screen(spaceShipImage, targetImage, bg, caption):
     global screen
     global level1BackRect
@@ -377,6 +382,16 @@ def update_screen(spaceShipImage, targetImage, bg, caption):
 
 	#refresh the screen
     py.display.flip()
+
+def update_ship(moveLeft, moveRight):
+    global spaceShipRect
+    global windowRect
+    global spaceShipVel
+
+    if moveLeft and (spaceShipRect.left - spaceShipVel) >= windowRect.left:
+        spaceShipRect.x -= spaceShipVel
+    if moveRight and (spaceShipRect.right + spaceShipVel) <= windowRect.right:
+        spaceShipRect.x += spaceShipVel
 
 
 def playGame(gameLevel):
@@ -437,21 +452,23 @@ def playGame(gameLevel):
         for event in py.event.get():
             if event.type == py.QUIT:
                 py.display.quit()
-            keyPressed = py.key.get_pressed()    
-            if keyPressed[py.K_RIGHT] and (spaceShipRect.right+spaceShipVel)<=windowRect.right:
-                spaceShipRect.x += spaceShipVel
-            elif keyPressed[py.K_LEFT] and (spaceShipRect.left-spaceShipVel)>=windowRect.left:
-                spaceShipRect.x -= spaceShipVel
-            elif keyPressed[py.K_SPACE]: 
-                fire_bullet(bulletLimit)
+            elif event.type == py.KEYDOWN:
+                if event.key == py.K_RIGHT:
+                    update_ship(False, True)
+                elif event.key == py.K_LEFT:
+                    update_ship(True, False)
+                elif event.key == py.K_SPACE: 
+                    fire_bullet(bulletLimit)
             elif event.type == py.MOUSEBUTTONDOWN:
                 mouse_pressed = py.mouse.get_pressed()
                 if mouse_pressed[0]: #Left mouse button clicked
                     mouse_pos = py.mouse.get_pos()
                     #quit game play and return to main program if mouse click is within Quit rect
-                    reset_game()
-                    continueGame = False
-                    return PLAYER_QUIT
+                    if mouse_pos[0] >= 320 and mouse_pos[0] <= 380 and mouse_pos[1] >= 660 and mouse_pos[1] <= 680: 
+                        reset_game(totalScore)
+                        continueGame = False
+                        MainMenuWin()
+                        return PLAYER_QUIT
 
 		#move up positions of all bullets in flight, check for target hits, update score
         update_bullets()
@@ -460,12 +477,18 @@ def playGame(gameLevel):
         outcome = update_targets()
         if outcome == PLAYER_LOST:
             spaceShipImage = py.image.load('GameImages\explosion imageResized.png')
-		#draw all images on screen and refresh screen
+		
+        #draw all images on screen and refresh screen
         update_screen(spaceShipImage, targetImage, bg, caption)
 
-        if outcome == PLAYER_WON or outcome == PLAYER_LOST:
+        if outcome == PLAYER_LOST:
             continueGame = False
-            reset_game()
+            reset_game(totalScore)
+            return outcome
+        if outcome == PLAYER_WON:
+            continueGame = False
+            print(totalScore)
+            reset_game(totalScore)
             return outcome
 
 
@@ -517,6 +540,7 @@ def MainMenuWin():
     global run
     global mouse_pos
     global currentDisplay
+    global totalScore
 
     if mainMenuRectList[0].collidepoint(mouse_pos[0], mouse_pos[1]):
         currentDisplay = display_Instructions()    
@@ -529,16 +553,22 @@ def MainMenuWin():
         outCome = playGame(1)
         if outCome == PLAYER_WON:
             #write player name, game level, totalScore to score file
+            scoreFile.write("\n Level 1 Score: \t" + str(totalScore))
+            scoreFile.close()
             #then display main menu window
             print("Player has won level 1 with score ", totalScore)
         elif outCome == PLAYER_LOST:
             #write player name, game level, 0 score to score file
             #then display main menu window
+            totalScore = 0
+            scoreFile.write("\n Level 1 Score: \t" + str(totalScore))
+            scoreFile.close()
             print("Player has lost level 1. Total score: ", totalScore)
 
             
         elif outCome == PLAYER_QUIT:
             #display main menu window
+            totalScore = 0
             print("Player has quit level 1. Total score: ", totalScore)
     elif mainMenuRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):   
         currentDisplay = DISPLAY_LEVEL2
@@ -547,10 +577,15 @@ def MainMenuWin():
         if outCome == PLAYER_WON:
             #write player name, game level, totalScore to score file
             #then display main menu window
+            scoreFile.write("\n Level 2 Score: \t" + str(totalScore))
+            scoreFile.close()
             print("Player has won level 2 with score ", totalScore)
         elif outCome == PLAYER_LOST:
             #write player name, game level, 0 score to score file
             #then display main menu window
+            totalScore = 0
+            scoreFile.write("\n Level 2 Score: \t" + str(totalScore))
+            scoreFile.close()
             print("Player has lost level 2. Total score: ", totalScore)
         elif outCome == PLAYER_QUIT:
             #display main menu window
@@ -685,6 +720,6 @@ while run:
                 else:
                     continue
 
-py.display.quit()
+py.quit()
 #Hw 11/2/21: Add game into level 1
             
