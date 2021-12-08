@@ -465,6 +465,7 @@ def playGame(gameLevel):
         for event in py.event.get():
             if event.type == py.QUIT:
                 py.display.quit()
+            #The keydown right left code is inspired from my program squareAndcircleGame.py (the game where the circle eats the square)
             elif event.type == py.KEYDOWN:
                 if event.key == py.K_RIGHT:
                     update_ship(False, True)
@@ -520,6 +521,7 @@ def display_Scoreboard():
         lineYValue = lineYValue + 20
         openFile
         openFile.close
+    #Score reading strategy is from my program fileStuff.py
     scoreboardBackRect = display_subtitle("Back", 660)
     py.display.update()
     return DISPLAY_SCOREBOARD
@@ -566,7 +568,7 @@ def MainMenuWin():
     if mainMenuRectList[0].collidepoint(mouse_pos[0], mouse_pos[1]):
         currentDisplay = display_Instructions()    
         #print("After display_instructions: rect", instructionBackRect.topleft, instructionBackRect.topright, instructionBackRect.bottomleft, instructionBackRect.bottomright)
-        print("Main Menu: Clicked on Instructions")
+        #print("Main Menu: Clicked on Instructions")
     elif mainMenuRectList[1].collidepoint(mouse_pos[0], mouse_pos[1]):   
         currentDisplay = DISPLAY_LEVEL1
 #        print("Main Menu: Clicked on Level 1")
@@ -620,7 +622,8 @@ def MainMenuWin():
     elif mainMenuRectList[5].collidepoint(mouse_pos[0], mouse_pos[1]):
         #print("Main Menu: Clicked on Exit")
         run = False
-    #This function checks if you've left clicked on any of the rectangles, and will write the score of the game into the score file.
+    #Collidepoint and constant code is from MY main menu program.
+    # This function checks if you've left clicked on any of the rectangles, and will write the score of the game into the score file.
 
 def backButtonToMenu():
     global currentDisplay
