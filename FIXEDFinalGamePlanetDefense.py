@@ -582,11 +582,9 @@ def MainMenuWin():
             scoreFile.close()
             display_subtitle("You won! Your score was " + str(totalScore), 100)
             display_subtitle("Click on quit button to go back to menu", 150)
-            #then display main menu window
             print("Player has won level 1 with score ", totalScore)
         elif outCome == PLAYER_LOST:
-            #write player name, game level, 0 score to score file
-            #then display main menu window
+            #write player name, game level, says that player lost level instead of writing score.
             totalScore = 0
             scoreFile = open('SpaceInvadersScore.txt', 'a')
             scoreFile.write("\n" + playerName + " lost Level 1")
@@ -596,7 +594,6 @@ def MainMenuWin():
             display_subtitle("Oh well. Click on quit button to go back to menu", 200)
             print("Player has lost level 1. Total score: ", totalScore)
         elif outCome == PLAYER_QUIT:
-            #display main menu window
             totalScore = 0
             print("Player has quit level 1. Total score: ", totalScore)
     elif mainMenuRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):   
@@ -605,7 +602,6 @@ def MainMenuWin():
         outCome = playGame(2)
         if outCome == PLAYER_WON:
             #write player name, game level, totalScore to score file
-            #then display main menu window
             totalScore = totalScore * 2
             scoreFile = open('SpaceInvadersScore.txt', 'a')
             scoreFile.write("\n" + playerName + "'s Level 2 Score: " + str(totalScore))
@@ -614,8 +610,7 @@ def MainMenuWin():
             display_subtitle("Click on quit button to go back to menu", 150)
             print("Player has won level 2 with score ", totalScore)
         elif outCome == PLAYER_LOST:
-            #write player name, game level, 0 score to score file
-            #then display main menu window
+            #write player name, game level, reports loss.
             totalScore = 0
             scoreFile = open('SpaceInvadersScore.txt', 'a')
             scoreFile.write("\n" + playerName + " lost Level 2")
