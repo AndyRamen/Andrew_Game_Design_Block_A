@@ -450,6 +450,7 @@ def playGame(gameLevel):
         newTargetRect.x = target_width + 2*target_width*t
         newTargetRect.y = TARGET_Y_POS
         targetList.append(newTargetRect)
+    #Lines 444-452 were inspired by Python Crash Couse by Eric Matthes
 
 	#refresh the screen
     update_screen(spaceShipImage, targetImage, bg, caption)
@@ -675,7 +676,7 @@ while run:
             mouse_pressed = py.mouse.get_pressed()
             if mouse_pressed[0]: #Left mouse button clicked
                 mouse_pos = py.mouse.get_pos()
-                print(mouse_pos)
+                #print(mouse_pos)
 
                 if currentDisplay == DISPLAY_MAIN_MENU:   
                     MainMenuWin()
