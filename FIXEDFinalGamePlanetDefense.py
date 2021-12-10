@@ -2,7 +2,7 @@
 #FINAL PROJECT
 
 from typing import Text
-import pygame as py, os, random, time
+import pygame as py, os, time
 
 py.init()
 
