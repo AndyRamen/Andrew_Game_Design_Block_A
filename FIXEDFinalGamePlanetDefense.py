@@ -601,7 +601,7 @@ def MainMenuWin():
             print("Player has quit level 1. Total score: ", totalScore)
     elif mainMenuRectList[2].collidepoint(mouse_pos[0], mouse_pos[1]):   
         currentDisplay = DISPLAY_LEVEL2
-#        print("Main Menu: Clicked on Level 2")
+        #print("Main Menu: Clicked on Level 2")
         outCome = playGame(2)
         if outCome == PLAYER_WON:
             #write player name, game level, totalScore to score file
