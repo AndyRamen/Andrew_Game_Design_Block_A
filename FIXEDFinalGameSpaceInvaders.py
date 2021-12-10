@@ -68,10 +68,9 @@ bulletColor = (255,0,0)
 spaceShipRect = py.Rect(0,0,20,20)
 spaceShipVel = 15
 bulletRemoved = False
-scoreFile = open('SpaceInvadersScore.txt', 'a')
 #define defauly horizontal and vertical target movement speeds
 targetHVel = 5
-targetVVel = 20
+targetVVel = 30
 targetDirection = 1 #1 to move right and -1 to move left
 TARGET_Y_POS = 20
 totalScore = 0
@@ -99,7 +98,7 @@ def display_TITLE(message, y):
     text = TITLE_FONT.render(message, 1, WHITE )
     x = width/2-text.get_width()/2
     titleRect = window.blit(text, (x, y))
-    py.display.update()
+    py.display.update(titleRect)
     return titleRect
     #Determines what "display_TITLE" will look like. Now when I call this and put the message it'll print it onto the screen.
 
@@ -108,17 +107,17 @@ def display_subtitle (message, y):
     text = SUBTITLE_FONT.render(message, 1, WHITE)
     x = width/2 - text.get_width()/2
     subtitleRect = window.blit(text, (x,y))
-    py.display.update()
+    py.display.update(subtitleRect)
     return subtitleRect
-    #Same thing as above but with a smaller size
 
+#Same thing as above but with a smaller size
 def display_text (message, y):
     py.time.delay(100)
     text = TEXT_FONT.render(message, 1, WHITE)
     x = width/2 - text.get_width()/2
-    subtitleRect = window.blit(text, (x,y))
-    py.display.update()
-    return subtitleRect
+    textRect = window.blit(text, (x,y))
+    py.display.update(textRect)
+    return textRect
     #Same thing again but tiny so I can put sentences onto the window.
 
 
@@ -234,8 +233,8 @@ def reset_game(totalScore):
 
     #reset any global variables that may have been changed during game play
     spaceShipRect = py.Rect(0,0,20,20)
-    targetHVel = 1
-    targetVVel = 15
+    targetHVel = 5
+    targetVVel = 30
     if PLAYER_LOST:
         totalScore = 0
     while len(targetList)>0:
@@ -330,6 +329,8 @@ def update_bullets():
         else:
             bulletRemoved = False
     #This function creates a copy of the bullet rect list to loop through, checks for hits, and moves the positions of all bullets in flight (not in that order)
+
+
 def update_targets():
     global targetList
     global spaceShipRect
@@ -351,7 +352,6 @@ def update_targets():
         targetDirection *= -1
     else:
         move_down = 0
-    py.time.delay(5)
 	
 	#adjust positions of all targets
     t = 0
@@ -362,7 +362,7 @@ def update_targets():
         if spaceShipRect.colliderect(targetList[t]):
             totalScore = 0
             return PLAYER_LOST
-		#if the target has reached bottom of screen, player loses
+		#if the target has reached bottom of screen, which should not happen, player loses
         if targetList[t].bottom >= windowRect.bottom:
             totalScore = 0
             return PLAYER_LOST
@@ -564,6 +564,7 @@ def MainMenuWin():
     global mouse_pos
     global currentDisplay
     global totalScore
+    global name
 
     if mainMenuRectList[0].collidepoint(mouse_pos[0], mouse_pos[1]):
         currentDisplay = display_Instructions()    
@@ -575,19 +576,24 @@ def MainMenuWin():
         outCome = playGame(1)
         if outCome == PLAYER_WON:
             #write player name, game level, totalScore to score file
-            scoreFile.write("\n Level 1 Score: " + str(totalScore))
+            scoreFile = open('SpaceInvadersScore.txt', 'a')
+            scoreFile.write( "\n" + playerName + "'s Level 1 Score: " + str(totalScore))
             scoreFile.close()
+            display_subtitle("You won! Your score was " + str(totalScore), 100)
+            display_subtitle("Click on quit button to go back to menu", 150)
             #then display main menu window
             print("Player has won level 1 with score ", totalScore)
         elif outCome == PLAYER_LOST:
             #write player name, game level, 0 score to score file
             #then display main menu window
             totalScore = 0
-            scoreFile.write("\n Level 1 Score: " + str(totalScore))
+            scoreFile = open('SpaceInvadersScore.txt', 'a')
+            scoreFile.write("\n" + playerName + " lost Level 1")
             scoreFile.close()
+            display_subtitle("You lost!", 100)
+            display_subtitle("...How did you lose on level 1?", 150)
+            display_subtitle("Oh well. Click on quit button to go back to menu", 200)
             print("Player has lost level 1. Total score: ", totalScore)
-
-            
         elif outCome == PLAYER_QUIT:
             #display main menu window
             totalScore = 0
@@ -600,15 +606,21 @@ def MainMenuWin():
             #write player name, game level, totalScore to score file
             #then display main menu window
             totalScore = totalScore * 2
-            scoreFile.write("\n Level 2 Score: " + str(totalScore))
+            scoreFile = open('SpaceInvadersScore.txt', 'a')
+            scoreFile.write("\n" + playerName + "'s Level 2 Score: " + str(totalScore))
             scoreFile.close()
+            display_subtitle("You won! Your score was " + str(totalScore), 100)
+            display_subtitle("Click on quit button to go back to menu", 150)
             print("Player has won level 2 with score ", totalScore)
         elif outCome == PLAYER_LOST:
             #write player name, game level, 0 score to score file
             #then display main menu window
             totalScore = 0
-            scoreFile.write("\n Level 2 Score: " + str(totalScore))
+            scoreFile = open('SpaceInvadersScore.txt', 'a')
+            scoreFile.write("\n" + playerName + " lost Level 2")
             scoreFile.close()
+            display_subtitle("You lost! Nice try.", 100)
+            display_subtitle("Click on quit button to go back to menu", 150)
             print("Player has lost level 2. Total score: ", totalScore)
         elif outCome == PLAYER_QUIT:
             #display main menu window
@@ -644,10 +656,13 @@ hbox=50
 wbox=50
 
 
-
+playerName = input("What is your name? Your scores will be recorded under this name. ")
 #counter=0
 run = True
 bkgColor = BLACK
+
+
+
 currentDisplay = display_Menu()
 
 #Main run loop below. Changes constants and calls functions.
