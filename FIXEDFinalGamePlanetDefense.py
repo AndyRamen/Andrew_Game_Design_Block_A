@@ -263,8 +263,10 @@ def update_bullets():
 
     if len(bulletList) == 0:
         return
-
+    #if youo use a for loop to loop through a list, the for loop expects the list to stay the same the entire time. 
+    # You can't remove items from the list because it will change the length
     #make a copy of bulletList to loop through so the real bulletList can be updated within loop
+    #Now the length of the copy doesn't change. We also did this with the targets rect list.
     tempRect = py.Rect(0,0,10,10)
     bulletListCopy = [tempRect]
     del bulletListCopy[0]
