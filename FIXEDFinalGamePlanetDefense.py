@@ -452,7 +452,7 @@ def playGame(gameLevel):
         newTargetRect.x = target_width + 2*target_width*t
         newTargetRect.y = TARGET_Y_POS
         targetList.append(newTargetRect)
-    #Lines 444-452 were inspired by Python Crash Couse by Eric Matthes
+    #Lines 444-454 were inspired by Python Crash Couse by Eric Matthes
 
 	#refresh the screen
     update_screen(spaceShipImage, targetImage, bg, caption)
@@ -522,8 +522,7 @@ def display_Scoreboard():
     for line in lines:
         display_text(line, lineYValue)
         lineYValue = lineYValue + 20
-        openFile
-        openFile.close
+    openFile.close
     #Score reading strategy is from my program fileStuff.py
     scoreboardBackRect = display_subtitle("Back", 660)
     py.display.update()
