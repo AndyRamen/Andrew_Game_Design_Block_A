@@ -143,7 +143,8 @@ def display_Menu():
     py.display.set_caption("Menu Window")
     py.display.update()
     return DISPLAY_MAIN_MENU
-    #This function prints everything you see on the main menu. It prints from the list menuMessages and gives each word a bullet point and a rect
+    #This function prints everything you see on the main menu.
+    #It prints from the list menuMessages and gives each word a bullet point and a rect
 
 def Settings_Menu():
     x = 40
@@ -200,7 +201,8 @@ def BKG_Color():
         py.time.delay(100)
         y += 80
         square.y = y
-    #Determines what is printed when user clicks on the Background Color option. Gives each word a rect and a bullet point.
+    #Determines what is printed when user clicks on the Background Color option. 
+    # Gives each word a rect and a bullet point.
 
 def display_Instructions():
     global instructionBackRect
@@ -216,7 +218,8 @@ def display_Instructions():
     display_text("Spacebar: Shoot", 250)
     py.display.update()
     return DISPLAY_INSTRUCTIONS
-    #This will print when you click on instructions. I used display_text for most of these so they can fit on screen.
+    #This will print when you click on instructions. 
+    # I used display_text for most of these so they can fit on screen.
 
 def reset_game(totalScore):
     global screen
@@ -241,7 +244,8 @@ def reset_game(totalScore):
         del targetList[0]
     while len(bulletList)>0:
         del bulletList[0]
-    #Resets everything in the game back to a factory default of sorts. Clear the entire screen and resets the global variables that change in game.
+    #Resets everything in the game back to a factory default of sorts. 
+    # Clear the entire screen and resets the global variables that change in game.
 
 def fire_bullet(bulletLimit):
     global bulletList
@@ -263,7 +267,7 @@ def update_bullets():
 
     if len(bulletList) == 0:
         return
-    #if youo use a for loop to loop through a list, the for loop expects the list to stay the same the entire time. 
+    #if you use a for loop to loop through a list, the for loop expects the list to stay the same the entire time. 
     # You can't remove items from the list because it will change the length
     #make a copy of bulletList to loop through so the real bulletList can be updated within loop
     #Now the length of the copy doesn't change. We also did this with the targets rect list.
@@ -330,7 +334,8 @@ def update_bullets():
             i += 1
         else:
             bulletRemoved = False
-    #This function creates a copy of the bullet rect list to loop through, checks for hits, and moves the positions of all bullets in flight (not in that order)
+    #This function creates a copy of the bullet rect list to loop through, checks for hits, 
+    # and moves the positions of all bullets in flight (not in that order)
 
 
 def update_targets():
@@ -371,7 +376,8 @@ def update_targets():
         t += 1
 
     return GAME_CONTINUES	
-    #This moves all targets down and checks if they are hitting the screen boundaries or are all shot down. If either of these are true, it will return an outcome.
+    #This moves all targets down and checks if they are hitting the screen boundaries or are all shot down. 
+    # If either of these are true, it will return an outcome.
 
 
 def update_screen(spaceShipImage, targetImage, bg, caption):
@@ -632,7 +638,8 @@ def MainMenuWin():
         #print("Main Menu: Clicked on Exit")
         run = False
     #Collidepoint and constant code is from MY main menu program.
-    # This function checks if you've left clicked on any of the rectangles, and will write the score of the game into the score file.
+    # This function checks if you've left clicked on any of the rectangles, 
+    # and will write the score of the game into the score file.
 
 def backButtonToMenu():
     global currentDisplay
