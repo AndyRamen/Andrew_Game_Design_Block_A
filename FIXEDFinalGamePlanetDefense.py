@@ -260,6 +260,7 @@ def fire_bullet(bulletLimit):
         bulletList.append(newBulletRect)
     #Fires bullet IF the length of the bullet list is less than the bulletLimit. Aligns bullet with ship.
 
+#FIxed problem part below
 def update_bullets():
     global bulletList
     global targetList
