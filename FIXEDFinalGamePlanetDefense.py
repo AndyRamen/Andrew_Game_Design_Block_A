@@ -30,6 +30,7 @@ DISPLAY_SETTINGS_SCNSIZE = 7
 DISPLAY_LEVEL2 = 8
 DISPLAY_SCOREBOARD = 9
 currentDisplay = DISPLAY_MAIN_MENU
+#Constants are from my game menu code
 
 # Define a list of Rects to store the main menu selection boxes
 tempRect = py.Rect(0,0,5,5)
